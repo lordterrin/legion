@@ -1,6 +1,17 @@
 <?php
 
-$servername = $_ENV['servername'];
+require $_SERVER['DOCUMENT_ROOT'] .'/legion/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'] . '/legion');
+$dotenv->load();
+
+$environment = $_ENV['environment'];
+
+if ( $environment !== 'prod') {
+	$servername = $_ENV['local_servername'];
+} else {
+	$servername = $_ENV['servername'];
+}
+
 $username 	= $_ENV['username'];
 $password 	= $_ENV['db_password'];
 
