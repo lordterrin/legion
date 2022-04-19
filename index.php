@@ -559,10 +559,22 @@ function select_primary_mode(id) {
 
 function get_attack_photo(item) {
 
+  if ( item ) {
+    item = item.toLowerCase();
+  } else {
+    item = 'none';
+  }
+
   return '<img src="img/attack_' + item + '.png">';
 }
 
 function get_armor_photo(item) {
+
+  if ( item ) {
+    item = item.toLowerCase();
+  } else {
+    item = 'none';
+  }
 
   return '<img src="img/armor_' + item + '.png">';
 }
@@ -579,7 +591,7 @@ function get_upgrade_photo(unit_name) {
 
       for ( var x=0; x<units_array.length; x++ ) {
 
-        unit = units_array[x].replace(/ /g, '').toLowerCase();;
+        unit = units_array[x].replace(/ /g, '').toLowerCase();
         return_string += '<img src="img/'+ unit +'.png">';
 
       }
@@ -789,11 +801,26 @@ function get_bad_units(level) {
 }
 
 function get_tier_photo(tier) {
+
+  if ( tier ) {
+    tier = tier.toLowerCase();
+  } else {
+    tier = 'none';
+  }
+
   return '<img src="img/tier' + tier +'.png">';
 }
 
 function get_builder_photo(builder) {
+
+  if ( builder ) {
+    builder = builder.toLowerCase();
+  } else {
+    builder = 'none'
+  }
+
   return '<img src="img/builder_' + builder + '.png">';
+
 }
 
 function show_units() {
