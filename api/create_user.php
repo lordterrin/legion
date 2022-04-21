@@ -24,8 +24,6 @@ $conn = new mysqli($servername, $db_username, $db_password, $db_db);
 // Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
-} else {
-	echo "connect successful";
 }
 
 $username 	= trim($_POST['user_username']);
@@ -86,52 +84,25 @@ if(empty(trim($_POST["user_password"]))){
     $password = trim($_POST["user_password"]);
 }
 
-
-
-
-
 // Prepare an insert statement
 $sql = "INSERT INTO legion_data.users (username, password) VALUES (?, ?)";
-$stmt = $conn->prepare($sql);
-
-if ( false===$stmt ) {
-	die('prepare() failed: ' . htmlspecialchars($conn->error));
-}
-
-$rc = $stmt->bind_param('ss', $username, $password);
-if ( false===$rc ) {
-  // again execute() is useless if you can't bind the parameters. Bail out somehow.
-  die('bind_param() failed: ' . htmlspecialchars($stmt->error));
-}
-
-$rc = $stmt->execute();
-// execute() can fail for various reasons. And may it be as stupid as someone tripping over the network cable
-// 2006 "server gone away" is always an option
-if ( false===$rc ) {
-  die('execute() failed: ' . htmlspecialchars($stmt->error));
-}
-
-echo "end die tho";
-die();
-
-
 if($stmt = mysqli_prepare($conn, $sql)){
-    // Bind variables to the prepared statement as parameters
-    mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+  // Bind variables to the prepared statement as parameters
+  mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
 
-    // Set parameters
-    $param_username = $username;
-    $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+  // Set parameters
+  $param_username = $username;
+  $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
 
-    // Attempt to execute the prepared statement
-    if(mysqli_stmt_execute($stmt)){
-        echo "Success!";
-    } else{
-        echo "Oops! Something went wrong. Please try again later.";
-    }
+  // Attempt to execute the prepared statement
+  if(mysqli_stmt_execute($stmt)){
+      echo "Success!";
+  } else{
+      echo "Oops! Something went wrong. Please try again later.";
+  }
 
-    // Close statement
-    mysqli_stmt_close($stmt);
+  // Close statement
+  mysqli_stmt_close($stmt);
 } else {
 	echo "error";
 }
