@@ -34,9 +34,11 @@ $created_at = date("Y-m-d H:i:s", time());
 
     // Validate username
     if(empty( $username )) {
-        $username_err = "Please enter a username.";
+        echo "Please enter a username.";
+        die();
     } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', $username )) {
-        $username_err = "Username can only contain letters, numbers, and underscores.";
+        echo "Username can only contain letters, numbers, and underscores.";
+        die();
     } else {
         // Prepare a select statement
         $sql = "SELECT id FROM legion_data.users WHERE username = ?";
@@ -64,6 +66,8 @@ $created_at = date("Y-m-d H:i:s", time());
 
             // Close statement
             mysqli_stmt_close($stmt);
+        } else {
+        	echo "error";
         }
     }
 
