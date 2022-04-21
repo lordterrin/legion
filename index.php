@@ -11,6 +11,13 @@ $dotenv->load();
 
 <script>
 
+  /* establish global variables */
+  var primary_game_mode     = '';
+  var secondary_game_modes  = [];
+  var levels_data           = [];
+  var units_data            = [];
+  var user_data             = [];
+
   try {
     var logged_in = "<?php echo $_SESSION["loggedin"] ?? 0; ?>";
     var user_id   = "<?php echo $_SESSION["user_id"] ?? 0; ?>";
@@ -112,11 +119,6 @@ $dotenv->load();
   String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   };
-
-  var primary_game_mode     = '';
-  var secondary_game_modes  = [];
-  var levels_data           = [];
-  var units_data            = [];
 
 $('.th_item').click(function() {
 
@@ -354,6 +356,8 @@ function open_login_prompt() {
           Swal.fire({
             title: 'Sweet.'
           });
+
+          preload_data();
 
         } else {
           reject(login_results);
@@ -1204,15 +1208,53 @@ function show_units() {
           rate_unit_html += '<div class="rate_unit_section">';
 
           for ( var p=1; p<11; p++ ) {
+
+            good_string = p + '_good';
+            bad_string  = p + '_bad';
+
+            /* has this user already provided unit ratings? */
+            good_class        = '';
+            good_icon_class   = '';
+            good_title        = 'This unit is good on level '+ p;
+
+            for ( var r=0; r<user_data.length; r++ ) {
+              if (
+                    user_data[r].unit_id == unit_id
+                    && user_data[r].audit_field == good_string
+                    && user_data[r].audit_value == 1
+                 ) {
+                console.log('good match in user_data['+r+']');
+                good_class        = ' already_marked_good';
+                good_icon_class   = ' uprated';
+                good_title        = 'You have already marked this item';
+              }
+            }
+
+            bad_class         = '';
+            bad_icon_class    = '';
+            bad_title         = 'This unit is bad on level '+ p;
+
+            for ( var r=0; r<user_data.length; r++ ) {
+              if (
+                    user_data[r].unit_id == unit_id
+                    && user_data[r].audit_field == bad_string
+                    && user_data[r].audit_value == 1
+                  ) {
+                bad_class         = ' already_marked_bad';
+                bad_icon_class    = ' downrated';
+                bad_title         = 'You have already marked this item';
+              }
+            }
+
             rate_unit_html += ''+
             '<div class="rate_unit_holder">'+
               '<div class="rate_unit_level">' + p + '</div>'+
               '<div class="rate_buttons_holder">'+
-                '<div id="up_'+ unit_id +'_'+ p +'" onclick="rate_up(this)" data-unit-id="'+ unit_id +'" data-unit="'+ unit_name +'" data-level="'+p+'" title="This unit is good on level '+ p +'" class="rate_up">'+
-                  '<span class="material-icons unrated">arrow_upward</span>'+
+                '<div id="up_'+ unit_id +'_'+ p +'" onclick="rate_up(this)" data-unit-id="'+ unit_id +'" data-unit="'+ unit_name +'" data-level="'+p+'" title="'+ good_title +'" class="rate_up '+ good_class +'">'+
+                  '<span class="material-icons unrated '+ good_icon_class +'">arrow_upward</span>'+
                 '</div>'+
-                '<div id="down_'+ unit_id +'_'+ p +'" onclick="rate_down(this)" data-unit-id="'+ unit_id +'" data-unit="'+ unit_name +'" data-level="'+p+'" title="This unit is bad on level '+ p +'" class="rate_down">'+
-                  '<span class="material-icons unrated">arrow_downward</span>'+
+                '<div id="down_'+ unit_id +'_'+ p +'" onclick="rate_down(this)" data-unit-id="'+ unit_id +'" data-unit="'+ unit_name +'" data-level="'+p+'" title="'+ bad_title +'" class="rate_down '+ bad_class +'">'+
+                  '<span class="material-icons unrated '+ bad_icon_class +'">arrow_downward</span>'+
                 '</div>'+
               '</div>'+
             '</div>';
@@ -1857,6 +1899,43 @@ function set_legion_body_height() {
   var legion_body_height = a - (b+c+d);
 
   $('.legion_body').height(legion_body_height);
+
+}
+
+function preload_data() {
+
+  $.ajax({
+    url: "api/pull_units.php",
+    success: function(result){
+        try {
+          units_data = JSON.parse(result);
+      } catch (e) {
+        units_data = [];
+      }
+      }}
+  );
+
+  $.ajax({
+    url: "api/pull_levels.php",
+    success: function(result){
+        try {
+          levels_data = JSON.parse(result);
+      } catch (e) {
+        levels_data = [];
+      }
+    }}
+  );
+
+  $.ajax({
+    url: "api/pull_user_settings.php",
+    success: function(result){
+        try {
+          user_data = JSON.parse(result);
+      } catch (e) {
+        user_data = [];
+      }
+    }}
+  );
 
 }
 

@@ -30,4 +30,15 @@ $.ajax({
 	}}
 );
 
+$.ajax({
+	url: "api/pull_user_settings.php",
+	success: function(result){
+    	try {
+    		user_data = JSON.parse(result);
+		} catch (e) {
+			user_data = [];
+		}
+	}}
+);
+
 </script>

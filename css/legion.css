@@ -788,6 +788,14 @@ body.swal2-shown > [aria-hidden="true"] {
 	font-size: 17px;
 }
 
+.already_marked_good {
+
+}
+
+.already_marked_bad {
+
+}
+
 .levels_units_holder {
 	display: flex;
   justify-content: center;
