@@ -16,13 +16,16 @@ if ( $environment !== 'prod') {
 
 $db_username 	= $_ENV['username'];
 $db_password 	= $_ENV['db_password'];
+$db_db 				= 'legion_data';
 
 // Create connection
-$conn = new mysqli($servername, $db_username, $db_password);
+$conn = new mysqli($servername, $db_username, $db_password, $db_db);
 
 // Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
+} else {
+	echo "connect successful";
 }
 
 $username 	= trim($_POST['user_username']);
@@ -32,96 +35,35 @@ $created_at = date("Y-m-d H:i:s", time());
 
 
 
-    // Validate username
-    if(empty( $username )) {
-        echo "Please enter a username.";
-        die();
-    } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', $username )) {
-        echo "Username can only contain letters, numbers, and underscores.";
-        die();
-    } else {
-        // Prepare a select statement
-        $sql = "SELECT id FROM legion_data.users WHERE username = ?";
-
-        if($stmt = mysqli_prepare($conn, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-
-            // Set parameters
-            $param_username = trim($_POST["user_username"]);
-
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                /* store result */
-                mysqli_stmt_store_result($stmt);
-
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    echo "This username is already taken.";
-                    die();
-                } else{
-                    $username = trim($_POST["user_username"]);
-                }
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            mysqli_stmt_close($stmt);
-        } else {
-        	echo "error";
-        }
-    }
-
-    // Validate password
-    if(empty(trim($_POST["user_password"]))){
-        echo "Please enter a password.";
-        die();
-    } elseif(strlen(trim($_POST["user_password"])) < 3){
-        echo "Password must have atleast 3 characters.";
-        die();
-    } else{
-        $password = trim($_POST["user_password"]);
-    }
-
-
-    // Check input errors before inserting in database
-
-
-    // Prepare an insert statement
-    $stmt = $mysqli->prepare("INSERT INTO legion_data.users (username, password) VALUES (?, ?)");
-
-    if ( false===$stmt ) {
-    	die('prepare() failed: ' . htmlspecialchars($mysqli->error));
-    }
-
-    $rc = $stmt->bind_param('ss', $username, $password);
-    if ( false===$rc ) {
-		  // again execute() is useless if you can't bind the parameters. Bail out somehow.
-		  die('bind_param() failed: ' . htmlspecialchars($stmt->error));
-		}
-
-		$rc = $stmt->execute();
-		// execute() can fail for various reasons. And may it be as stupid as someone tripping over the network cable
-		// 2006 "server gone away" is always an option
-		if ( false===$rc ) {
-		  die('execute() failed: ' . htmlspecialchars($stmt->error));
-		}
-
-		echo "end die tho";
-		die();
-
+// Validate username
+if(empty( $username )) {
+    echo "Please enter a username.";
+    die();
+} elseif(!preg_match('/^[a-zA-Z0-9_]+$/', $username )) {
+    echo "Username can only contain letters, numbers, and underscores.";
+    die();
+} else {
+    // Prepare a select statement
+    $sql = "SELECT id FROM legion_data.users WHERE username = ?";
 
     if($stmt = mysqli_prepare($conn, $sql)){
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+        mysqli_stmt_bind_param($stmt, "s", $param_username);
 
         // Set parameters
-        $param_username = $username;
-        $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+        $param_username = trim($_POST["user_username"]);
 
         // Attempt to execute the prepared statement
         if(mysqli_stmt_execute($stmt)){
-            echo "Success!";
+            /* store result */
+            mysqli_stmt_store_result($stmt);
+
+            if(mysqli_stmt_num_rows($stmt) == 1){
+                echo "This username is already taken.";
+                die();
+            } else{
+                $username = trim($_POST["user_username"]);
+            }
         } else{
             echo "Oops! Something went wrong. Please try again later.";
         }
@@ -131,8 +73,70 @@ $created_at = date("Y-m-d H:i:s", time());
     } else {
     	echo "error";
     }
+}
 
-    // Close connection
-    mysqli_close($conn);
+// Validate password
+if(empty(trim($_POST["user_password"]))){
+    echo "Please enter a password.";
+    die();
+} elseif(strlen(trim($_POST["user_password"])) < 3){
+    echo "Password must have atleast 3 characters.";
+    die();
+} else{
+    $password = trim($_POST["user_password"]);
+}
+
+
+
+
+
+// Prepare an insert statement
+$sql = "INSERT INTO legion_data.users (username, password) VALUES (?, ?)";
+$stmt = $conn->prepare($sql);
+
+if ( false===$stmt ) {
+	die('prepare() failed: ' . htmlspecialchars($conn->error));
+}
+
+$rc = $stmt->bind_param('ss', $username, $password);
+if ( false===$rc ) {
+  // again execute() is useless if you can't bind the parameters. Bail out somehow.
+  die('bind_param() failed: ' . htmlspecialchars($stmt->error));
+}
+
+$rc = $stmt->execute();
+// execute() can fail for various reasons. And may it be as stupid as someone tripping over the network cable
+// 2006 "server gone away" is always an option
+if ( false===$rc ) {
+  die('execute() failed: ' . htmlspecialchars($stmt->error));
+}
+
+echo "end die tho";
+die();
+
+
+if($stmt = mysqli_prepare($conn, $sql)){
+    // Bind variables to the prepared statement as parameters
+    mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+
+    // Set parameters
+    $param_username = $username;
+    $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+
+    // Attempt to execute the prepared statement
+    if(mysqli_stmt_execute($stmt)){
+        echo "Success!";
+    } else{
+        echo "Oops! Something went wrong. Please try again later.";
+    }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+} else {
+	echo "error";
+}
+
+// Close connection
+mysqli_close($conn);
 
 ?>
