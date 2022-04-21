@@ -1,11 +1,25 @@
 <?php
 
+session_start();
+
 require_once __DIR__.'/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 ?>
+
+<script>
+
+  try {
+    var logged_in = "<?php echo $_SESSION["loggedin"] ?? 0; ?>";
+    var user_id   = "<?php echo $_SESSION["user_id"] ?? 0; ?>";
+  } catch(e) {
+    var logged_in = 0;
+    var user_id   = 0;
+  }
+
+</script>
 
 <?php include 'header.php';?>
 <?php include 'footer.php';?>
@@ -15,40 +29,66 @@ $dotenv->load();
 
 <body>
 
-  <div class="header">
-    <div class="left_header">
-      <div class="left_header_title">Legion TD Players Guide</div>
-      <div class="left_header_subtitle">For Warcraft 3 Legion TD 9.5+ by SchachMatt</div>
-    </div>
-    <div class="left_header">
-      <div class="left_header_item">Discord: <a target="_blank" href="https://discord.gg/n5tWRPgqJm">https://discord.gg/n5tWRPgqJm</a></div>
+  <div class="tiny_header" style="display: none;">
+    <div class="th_item th_title">LTD Players Guide</div>
+    <div class="th_item th_discord"><i class="fab fa-discord th_icon"></i></div>
+    <div class="th_item th_home">home</div>
+    <div class="th_item th_modes">game modes</div>
+    <div class="th_item th_builders">builders</div>
+    <div class="th_item th_units">units</div>
+    <div class="th_item th_levels">levels</div>
+    <div class="th_item th_filter">
+      <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt">
+        <label>
+          <div class="filter_text_alt">Filter</div>
+          <input id="th_filter" type="search">
+        </label>
+      </div>
     </div>
   </div>
 
-  <div class="subheader">
-    <div id="home" class="right_header_item">
-      <div class="header_image"><img src="img/home.png"></div>
-      <div class="header_subtitle">Home</div>
+  <div class="header">
+
+    <div class="top_header">
+      <div class="left_header">
+        <div class="left_header_title">Legion TD Players Guide</div>
+        <div class="left_header_subtitle">For Warcraft 3 Legion TD 9.5+ by SchachMatt</div>
+      </div>
+      <div class="right_header">
+        <div class="left_header_item">Discord: <a target="_blank" href="https://discord.gg/n5tWRPgqJm">https://discord.gg/n5tWRPgqJm</a></div>
+        <div title="Login and account creation" class="login_holder">
+          <div class="login_status"></div>
+          <img class="home_left" src="img/wc3_left.png">
+          <img class="home_right" src="img/wc3_right.png">
+        </div>
+      </div>
     </div>
-    <div id="modes" class="right_header_item">
-      <div class="header_image"><img src="img/modes.png"></div>
-      <div class="header_subtitle">Game Modes</div>
-    </div>
-    <div id="builders" class="right_header_item">
-      <div class="header_image"><img src="img/prophet.png"></div>
-      <div class="header_subtitle">Builders</div>
-    </div>
-    <div id="units" class="right_header_item">
-      <div class="header_image"><img src="img/icetrollshaman.png"></div>
-      <div class="header_subtitle">Units</div>
-    </div>
-    <div id="levels" class="right_header_item">
-      <div class="header_image"><img src="img/draeneichieftains.png"></div>
-      <div class="header_subtitle">Levels</div>
-    </div>
-    <div id="strategy" class="right_header_item">
-      <div class="header_image"><img src="img/chaos_attack.png"></div>
-      <div class="header_subtitle">Strategy</div>
+
+    <div class="subheader">
+      <div id="home" class="right_header_item">
+        <div class="header_image"><img src="img/home.png"></div>
+        <div class="header_subtitle">Home</div>
+      </div>
+      <div id="modes" class="right_header_item">
+        <div class="header_image"><img src="img/modes.png"></div>
+        <div class="header_subtitle">Game Modes</div>
+      </div>
+      <div id="builders" class="right_header_item">
+        <div class="header_image"><img src="img/prophet.png"></div>
+        <div class="header_subtitle">Builders</div>
+      </div>
+      <div id="units" class="right_header_item">
+        <div class="header_image"><img src="img/icetrollshaman.png"></div>
+        <div class="header_subtitle">Units</div>
+      </div>
+      <div id="levels" class="right_header_item">
+        <div class="header_image"><img src="img/draeneichieftains.png"></div>
+        <div class="header_subtitle">Levels</div>
+      </div>
+      <!-- <div id="strategy" class="right_header_item">
+        <div class="header_image"><img src="img/chaos_attack.png"></div>
+        <div class="header_subtitle">Strategy</div>
+      </div> -->
     </div>
   </div>
 
@@ -59,7 +99,7 @@ $dotenv->load();
 
   <div class="legion_footer">
     <div class="footer_item">(c)2022</div>
-    <div class="footer_item">About</div>
+    <div class="footer_item" onclick="about_swal()">About</div>
     <div class="footer_item">Home</div>
   </div>
 
@@ -78,6 +118,26 @@ $dotenv->load();
   var levels_data           = [];
   var units_data            = [];
 
+$('.th_item').click(function() {
+
+  if ( $(this).hasClass('th_title') ) {
+    $('#home').trigger('click');
+    hide_tiny_header();
+  } else if ( $(this).hasClass('th_discord') ) {
+    window.open('https://discord.gg/n5tWRPgqJm', '_blank');
+  } else if ( $(this).hasClass('th_home') ) {
+    $('#home').trigger('click');
+    hide_tiny_header();
+  } else if ( $(this).hasClass('th_modes') ) {
+    $('#modes').trigger('click');
+    hide_tiny_header();
+  } else if ( $(this).hasClass('th_units') ) {
+    $('#units').trigger('click');
+  } else if ( $(this).hasClass('th_levels') ) {
+    $('#levels').trigger('click');
+  }
+
+});
 
 /* menu icon / text hover functionality */
 $(".right_header_item").hover(function(){
@@ -87,6 +147,245 @@ $(".right_header_item").hover(function(){
   $(this).find('.header_image').removeClass('hi_hover');
   $(this).find('.header_subtitle').removeClass('ht_hover');
 });
+
+$('.login_holder').click(function() {
+
+  $('.login_holder').addClass('overflow_hidden');
+  $('.home_left').addClass('left_open');
+  $('.home_right').addClass('right_open');
+
+  setTimeout(function() {
+    open_login_prompt();
+  }, 1800);
+
+});
+
+function about_swal() {
+  Swal.fire({
+    title: "Created out of love for a 20 year old game.",
+    text : "Questions? Comments? Email me at lordterrin (at) gmail (dot) com"
+  })
+}
+
+function create_new_user(user_username, user_password) {
+
+  console.log('2: before promise');
+  return new Promise((resolve, reject) => {
+
+    console.log('2: before ajax');
+    $.ajax({
+      type: "POST",
+      url: "api/create_user.php",
+      data: {
+        user_username : user_username,
+        user_password : user_password,
+      },
+      success: function(response) {
+        console.log('2: before resolve');
+        resolve(response);
+      }
+    });
+
+  });
+
+}
+
+function log_user_in(user_username, user_password) {
+
+  console.log('2: before promise');
+  return new Promise((resolve, reject) => {
+
+    console.log('2: before ajax');
+    $.ajax({
+      type: "POST",
+      url: "api/log_user_in.php",
+      data: {
+        user_username : user_username,
+        user_password : user_password,
+      },
+      success: function(response) {
+        console.log('2: before resolve');
+        resolve(response);
+      }
+    });
+
+  });
+
+}
+
+async function wait_for_new_user_creation(user_username, user_password) {
+
+  console.log('1: before ajax call');
+  const result = await create_new_user(user_username, user_password);
+  console.log('1: ajax response = ' + result);
+
+  return result;
+
+}
+
+async function wait_for_user_login(user_username, user_password) {
+
+  console.log('1: before ajax call');
+  const result = await log_user_in(user_username, user_password);
+  console.log('1: ajax response = ' + result);
+
+  return result;
+
+}
+
+$(document).on('click', '.create_account', async function() {
+
+  user_username = $('#user_username').val();
+  user_password = $('#user_password').val();
+
+  if ( user_username.length == 0 || user_password.length == 0 ) {
+    /* throw new Error goes to the .catch(err => handler */
+    Swal.showValidationMessage('Enter the username and password you wish to create');
+    return false;
+  }
+
+  create_user = await wait_for_new_user_creation(user_username, user_password);
+
+  if ( create_user == 'Success!' ) {
+    Swal.showValidationMessage('Success! Go ahead and log in.');
+    $('.swal2-validation-message').addClass('swal_success_validation');
+    $('.create_account').addClass('no_click_lowpacity');
+
+  } else {
+    reject(create_user);
+  }
+
+})
+
+function open_login_prompt() {
+
+  if ( logged_in == 1 ) {
+    Swal.fire({
+      title: "You're already logged in",
+      showCancelButton: true,
+      cancelButtonText : 'Logout'
+    }).then((result) => {
+
+
+    if (result.isConfirmed) {
+
+    } else if ( result.isDismissed ) {
+      $.ajax({
+        type: "POST",
+        url: "api/logout.php",
+        success: function(response) {
+          logged_in = 0;
+          user_id   = 0;
+          $('.login_status').removeClass('logged_in');
+          Swal.fire({
+            title: "bye."
+          })
+        }
+      });
+
+      $('.login_holder').removeClass('overflow_hidden');
+      $('.home_left').removeClass('left_open');
+      $('.home_right').removeClass('right_open');
+    }
+
+  })
+
+    $('.login_holder').removeClass('overflow_hidden');
+    $('.home_left').removeClass('left_open');
+    $('.home_right').removeClass('right_open');
+
+    return false;
+  }
+
+  swal_html = ''+
+  '<div class="login_swal_holder">'+
+    '<div class="login__field">'+
+      '<i class="login__icon fas fa-user"></i>'+
+      '<input id="user_username" type="text" class="login__input" placeholder="Username">'+
+    '</div>'+
+    '<div class="login__field">'+
+      '<i class="login__icon fas fa-lock"></i>'+
+      '<input id="user_password" type="password" class="login__input" placeholder="Password">'+
+    '</div>'+
+    '<div class="create_account">create account</div>'+
+  '</div>';
+
+  Swal.fire({
+    title: 'Login',
+    html: swal_html,
+    showCancelButton: true,
+    confirmButtonText: 'Login',
+    backdrop : true,
+    showLoaderOnConfirm: true,
+    allowOutsideClick: true,
+    preConfirm: function (foo) {
+
+      console.log('0: 1');
+
+      return new Promise(async function (resolve, reject) {
+
+        console.log('0: 2');
+        user_username = $('#user_username').val();
+        user_password = $('#user_password').val();
+
+        if ( user_username.length == 0 || user_password.length == 0 ) {
+          /* throw new Error goes to the .catch(err => handler */
+          reject('Enter a username and password.');
+          return false;
+        }
+
+        login_results = await wait_for_user_login(user_username, user_password);
+
+        console.log('0: should not see this until ajax is done');
+        console.log('0: log_user_in', login_results);
+
+        if ( login_results == 'Success!' ) {
+
+          resolve(login_results);
+
+          $('.login_holder').removeClass('overflow_hidden');
+          $('.home_left').removeClass('left_open');
+          $('.home_right').removeClass('right_open');
+
+          logged_in = 1;
+          user_id   = "<?php echo $_SESSION["user_id"] ?? 0; ?>";
+          $('.login_status').addClass('logged_in');
+
+          Swal.fire({
+            title: 'Sweet.'
+          });
+
+        } else {
+          reject(login_results);
+        }
+
+
+      }).catch(err => {
+        Swal.showValidationMessage(`${err}`);
+        return false;
+      })
+
+
+    } //close preConfirm
+
+  }).then((result) => {
+
+    console.log('pc 4');
+
+    console.log(result);
+
+    if (result.isConfirmed) {
+      // Swal.fire({
+      //   title: 'Sweet.'
+      // })
+    } else if ( result.isDismissed ) {
+      $('.login_holder').removeClass('overflow_hidden');
+      $('.home_left').removeClass('left_open');
+      $('.home_right').removeClass('right_open');
+    }
+  })
+
+}
 
 $(document).on('click', '.right_header_item', function() {
 
@@ -158,7 +457,7 @@ function show_modes() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Each game of Legion TD has its mode set by the host of the game, who can pick from a few <span>primary</span> game modes, as well as several <span>secondary</span> game modes. Use the tool below to combine various modes and see what they do.'+
+      'Each game of Legion TD has its mode set by the host of the game, who can pick from a few <span>primary</span> game modes, as well as several <span>secondary</span> game modes. Use the tool below to combine various modes and see what they do. You can also copy your gamemode to your clipboard.'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -832,7 +1131,7 @@ function show_units() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level.  Results will be visible in the <span>levels</span> page for all users</div></div>'+
+      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels</span> page for all users</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -880,9 +1179,27 @@ function show_units() {
           var tier_photo            = get_tier_photo(tier);
           var builder_photo         = get_builder_photo(builder);
 
-          var unit_strategy         = ( data.basic_strategy == null ? 'No strategy exists yet for this unit' : data.basic_strategy) ;
+          var unit_strategy         = data.basic_strategy;
+
+          var final_upgrades_to     = get_final_creep_name(upgrades_to);
+          var final_upgrades_from   = get_final_creep_name(upgrades_from);
 
           var rate_unit_html = ''
+
+          if ( unit_strategy == null ) {
+            unit_strategy = ''+
+            '<div class="no_strategy_holder">'+
+              '<div id="ns_'+ unit_id +'" data-unit-id="'+ unit_id +'" class="no_strategy_text">No basic strategy exists yet for this unit.  If you want to help the community, consider <span>adding one</span>!</div>'+
+              '<div class="new_strategy_holder textarea_hidden">'+
+                '<textarea style="resize: none;" class="new_strategy_textarea" id="text_'+ unit_id +'" name="text_'+ unit_id +'" rows="4" cols="50"></textarea>'+
+                '<div class="textarea_buttons_holder">'+
+                  '<div class="textarea_button"><i id="confirm_'+ unit_id +'" class="far fa-check-square confirm_button"></i></div>'+
+                  '<div class="textarea_button"><i id="cancel_'+ unit_id +'" class="far fa-window-close cancel_button"></i></div>'+
+                '</div>'+
+              '</div>'+
+            '</div>';
+
+          }
 
           rate_unit_html += '<div class="rate_unit_section">';
 
@@ -974,13 +1291,13 @@ function show_units() {
                 '<div class="item">'+
                   '<div class="levels_item_title">Upgrades From</div>'+
                   '<div class="upgrade_photos">'+ upgrades_from_photo +'</div>'+
-                  '<div class="levels_item_subtitle">'+ upgrades_from +'</div>'+
+                  '<div class="levels_item_subtitle">'+ final_upgrades_from +'</div>'+
                 '</div>'+
 
                 '<div class="item">'+
                   '<div class="levels_item_title">Upgrades Into</div>'+
                   '<div class="upgrade_photos">'+ upgrades_to_photo +'</div>'+
-                  '<div class="levels_item_subtitle">'+ upgrades_to +'</div>'+
+                  '<div class="levels_item_subtitle">'+ final_upgrades_to +'</div>'+
                 '</div>'+
 
               '</div>'+
@@ -989,7 +1306,7 @@ function show_units() {
 
             '<div class="levels_item_holder">'+
               '<div class="levels_item_column">'+
-                '<div class="strategy_title">Basic Unit Strategy</div>'+
+                '<div id="strategy_'+ unit_id +'" class="strategy_title">Basic Unit Strategy <span title="edit this!" class="material-icons edit_strategy">edit</span></div>'+
                 '<div class="strategy_text">'+ unit_strategy +'</div>'+
               '</div>'+
             '</div>'+
@@ -1013,6 +1330,121 @@ function show_units() {
   $('.legion_body').fadeIn(500);
 
 }
+
+$(document).on('click', '.no_strategy_text', function() {
+
+  var this_unit_id = $(this).data('unitId');
+
+  $(this).addClass('textarea_hidden');
+  $('#text_' + this_unit_id).parent().addClass('textarea_shown');
+
+});
+
+$(document).on('click', '.cancel_button_alt', function() {
+
+  var this_unit_id = $(this).attr('id').replace('cancel_', '');
+  $('#strategy_' + this_unit_id).parent().find('.strategy_text').removeClass('textarea_hidden');
+  $('#strategy_' + this_unit_id).parent().find('.new_strategy_holder').remove();
+
+});
+
+$(document).on('click', '.confirm_button_alt', function() {
+
+  var this_unit_id = $(this).attr('id').replace('confirm_', '');
+  var new_unit_text = $('#text_' + this_unit_id).val();
+
+  $.ajax({
+    type: "POST",
+    url: "api/change_unit_text.php",
+    data: {
+      new_unit_text : new_unit_text,
+      unit_id       : this_unit_id,
+    },
+    success: function(response) {
+
+      foo = response;
+
+      if ( foo == 'Please login first' ) {
+        alertify.error('Please login first');
+      }
+
+      $('#strategy_' + this_unit_id).parent().find('.strategy_text').removeClass('textarea_hidden');
+      $('#strategy_' + this_unit_id).parent().find('.strategy_text').text(new_unit_text);
+      $('#strategy_' + this_unit_id).parent().find('.new_strategy_holder').remove();
+
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      console.log(xhr.responseText);
+    }
+  });
+
+});
+
+$(document).on('click', '.cancel_button', function() {
+
+  var this_unit_id = $(this).attr('id').replace('cancel_', '');
+  $('#text_' + this_unit_id).parent().removeClass('textarea_shown');
+  $('#ns_' + this_unit_id).removeClass('textarea_hidden');
+
+});
+
+$(document).on('click', '.confirm_button', function() {
+
+  var this_unit_id = $(this).attr('id').replace('confirm_', '');
+  var new_unit_text = $('#text_' + this_unit_id).val();
+
+  console.log('this_unit_id', this_unit_id);
+  console.log('new_unit_text', new_unit_text);
+
+  $.ajax({
+    type: "POST",
+    url: "api/change_unit_text.php",
+    data: {
+      new_unit_text : new_unit_text,
+      unit_id       : this_unit_id,
+    },
+    success: function(response) {
+      foo = response;
+      console.log(foo);
+
+      if ( foo == 'Please login first' ) {
+        alertify.error('Please login first');
+      }
+
+      $('#strategy_' + this_unit_id).parent().find('.no_strategy_text').removeClass('textarea_hidden');
+      $('#strategy_' + this_unit_id).parent().find('.no_strategy_text').text(new_unit_text);
+      $('#strategy_' + this_unit_id).parent().find('.new_strategy_holder').remove();
+
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      console.log(xhr.responseText);
+    }
+  });
+
+});
+
+
+function fooasdf(foo) {
+
+
+
+}
+
+$(document).on('click', '.edit_strategy', function() {
+
+  var existing_strategy = $(this).parent().parent().find('.strategy_text').text();
+  var unit_id = $(this).parent().attr('id').replace('strategy_', '');
+
+  $(this).parent().parent().find('.strategy_text').addClass('textarea_hidden');
+  $(this).parent().parent().append('<div class="new_strategy_holder">'+
+    '<textarea style="resize: none;" class="new_strategy_textarea" id="text_'+ unit_id +'" name="text_'+ unit_id +'" rows="4" cols="50">'+ existing_strategy +'</textarea>'+
+    '<div class="textarea_buttons_holder">'+
+      '<div class="textarea_button"><i id="confirm_'+ unit_id +'" class="far fa-check-square confirm_button_alt"></i></div>'+
+      '<div class="textarea_button"><i id="cancel_'+ unit_id +'" class="far fa-window-close cancel_button_alt"></i></div>'+
+    '</div>'+
+  '</div>');
+
+});
 
 function rate_up(data) {
 
@@ -1104,17 +1536,32 @@ function pre_show_levels() {
 
 }
 
+function get_final_creep_name(creep_name) {
+
+  if ( creep_name.includes(',') ) {
+    creep_string = '';
+    creep_array = creep_name.split(',');
+    for ( var x=0; x<creep_array.length; x++ ) {
+      creep_string += '<div class="multiple_upgrades">' + creep_array[x] + '</div>';
+    }
+    return creep_string;
+  } else {
+    return creep_name;
+  }
+
+}
+
 function show_levels() {
 
   html = ''+
   '<div class="lb_title">'+
   'Levels'+
   '</div>'+
-  '<div class="level_chooser">'+
-    '<div class="levels_holder"><div class="levels">1-10</div></div>'+
-    '<div class="levels_holder"><div class="levels">11-20</div></div>'+
-    '<div class="levels_holder"><div class="levels">20+</div></div>'+
-  '</div>'+
+  // '<div class="level_chooser">'+
+  //   '<div class="levels_holder"><div class="levels">1-10</div></div>'+
+  //   '<div class="levels_holder"><div class="levels">11-20</div></div>'+
+  //   '<div class="levels_holder"><div class="levels">20+</div></div>'+
+  // '</div>'+
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
@@ -1160,7 +1607,6 @@ function show_levels() {
           var weak_to_photo         = get_attack_photo(weak_to);
           var good_units_html       = get_good_units(level);
           var bad_units_html        = get_bad_units(level);
-
 
           output = ''+
           '<div class="levels_master_holder">'+
@@ -1308,18 +1754,104 @@ function show_strategy() {
  *
  ********************** */
 
+$(document).on('keyup change paste', '#units_table_filter input', function() {
+  foo = $(this).val();
+  $('#th_filter').val(foo);
+});
+
+var duration = 200;
+
+function show_tiny_header() {
+
+  $('.header').removeClass('grow_header').addClass('shrink_header');
+  $('.header').fadeOut({
+    duration: duration,
+    complete : function() {
+
+      set_legion_body_height();
+
+      $('.tiny_header').addClass('grow_tiny_header').removeClass('shrink_tiny_header');
+      $('.tiny_header').fadeIn({
+        duration: duration,
+        complete : function() {
+
+        }
+      });
+
+    } // close complete
+  });
+
+
+}
+
+function hide_tiny_header() {
+
+  $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
+  $('.tiny_header').fadeOut({
+    duration: duration,
+    complete : function() {
+
+      set_legion_body_height();
+
+      $('.header').addClass('grow_header').removeClass('shrink_header');
+      $('.header, .subheader').fadeIn({
+        duration: duration
+      });
+
+    } // close complete
+  })
+
+}
+
+function visible_on_screen(element) {
+  try {
+    el    = document.getElementById(element);
+    ment  = el.getBoundingClientRect();
+  } catch (e) {
+    return false;
+  }
+  return (
+      ment.top >= 0 &&
+      ment.left >= 0 &&
+      ment.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      ment.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+$('.legion_body').scroll(function (event) {
+  var scroll = $('.legion_body').scrollTop();
+  if ( scroll > 1 ) {
+    show_tiny_header();
+    filter_visibility = visible_on_screen('units_table_filter');
+    console.log(filter_visibility);
+  } else {
+    //hide_tiny_header();
+  }
+
+});
 
 /* dynamically set height of .legion_body */
 $(window).resize(function() {
   set_legion_body_height();
 });
 
+$(document).on('keyup change paste', '#th_filter', function() {
+  var input = $(this).val();
+  $('.dataTables_filter').find('input').val(input).trigger('keyup');
+})
+
 function set_legion_body_height() {
 
   /* gather variables */
   var a = $(window).height();
-  var b = $('.header').outerHeight();
-  var c = $('.subheader').outerHeight();
+  if ( $('.header').is(':visible') ) {
+    var b = $('.header').outerHeight();
+    var c = 0;  //$('.subheader').outerHeight();
+  } else {
+    var b = 0;
+    var c = $('.tiny_header').outerHeight();
+  }
+
   var d = $('.legion_footer').outerHeight();
 
   var legion_body_height = a - (b+c+d);
@@ -1332,6 +1864,11 @@ $(document).ready(function() {
 
   set_legion_body_height();
   $("#home").click();
+
+  if ( logged_in == 1 ) {
+    $('.login_status').addClass('logged_in');
+  }
+
 })
 
 </script>
