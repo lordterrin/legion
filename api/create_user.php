@@ -88,7 +88,28 @@ $created_at = date("Y-m-d H:i:s", time());
 
 
     // Prepare an insert statement
-    $sql = "INSERT INTO legion_data.users (username, password) VALUES (?, ?)";
+    $stmt = $mysqli->prepare("INSERT INTO legion_data.users (username, password) VALUES (?, ?)");
+
+    if ( false===$stmt ) {
+    	die('prepare() failed: ' . htmlspecialchars($mysqli->error));
+    }
+
+    $rc = $stmt->bind_param('ss', $username, $password);
+    if ( false===$rc ) {
+		  // again execute() is useless if you can't bind the parameters. Bail out somehow.
+		  die('bind_param() failed: ' . htmlspecialchars($stmt->error));
+		}
+
+		$rc = $stmt->execute();
+		// execute() can fail for various reasons. And may it be as stupid as someone tripping over the network cable
+		// 2006 "server gone away" is always an option
+		if ( false===$rc ) {
+		  die('execute() failed: ' . htmlspecialchars($stmt->error));
+		}
+
+		echo "end die tho";
+		die();
+
 
     if($stmt = mysqli_prepare($conn, $sql)){
         // Bind variables to the prepared statement as parameters
