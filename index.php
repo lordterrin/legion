@@ -969,9 +969,36 @@ function get_strategy_text(level) {
 
   } else if ( level == 10 ) {
 
-    output = 'Level 10 is the first (and usually only) boss round of the game, and many games end here.  In order to beat this round, you generally need a strong front line of tanks and lots of <span>single-target piercing damage</span>.  Units that deal splash damage are no longer strong on this round, while units that slow enemy movment and attack speed are very helpful.  Because level 10 is so hard by itself, teams will generally send the largest amount of additional sends on this round in an attempt to kill their opponent\'s king.  You should be sending the largest and best units possible to the enemy team here in an attempt to kill them.  A good general goal by level 10 is to have 10 wisps, with at least 5 lumber carry upgrades.  <div class="send_threat threat_high">This round poses a maximum risk of additional sends!</div>'
+    output = 'Level 10 is the first (and usually only) boss round of the game, and many games end here.  In order to beat this round, you generally need a strong front line of tanks and lots of <span>single-target piercing damage</span>.  Units that deal splash damage are no longer strong on this round, while units that slow enemy movment and attack speed are very helpful.  Because level 10 is so hard by itself, teams will generally send the largest amount of additional sends on this round in an attempt to kill their opponent\'s king.  You should be sending the largest and best units possible to the enemy team here in an attempt to kill them.  A good general goal by level 10 is to have 10 wisps, with at least 5 lumber carry upgrades.  <div class="send_threat threat_high">This round poses a maximum risk of additional sends!</div>';
 
+  } else if ( level == 11 ) {
+
+    output = 'Level 11 is generally an easy level without or without siege damage.  Having siege definitely helps, but it not absolutely required.  Be careful <span>CCing</span> this round if the enemy team did not send on level 10, as teams will sometimes skip sending on 10 if they see your team has tons of piercing damage, and will instead try to kill you on level 11. During rounds 11 and 12, you should be focusing on ensuring you hold 13 and 14, which are much harder! <div class="send_threat threat_low">This round poses a low to medium risk of additional sends</div>';
+
+  } else if ( level == 12 ) {
+
+    output = 'Level 12 is generally very easy as most players already have the required damage to defeat it.  If you leak here, it\'s a very bad sign for round 14, (which also has medium armor). During rounds 11 and 12, you should be focused on building your team to hold levels 13 and 14, which are significantly harder.<div class="send_threat threat_low">This round poses a low to medium risk of additional sends</div>';
+
+  } else if ( level == 13 ) {
+
+    output = 'Level 13 is quite difficult, despite the fact that many players will have a lot of piercing damage from round 10.  This is amplified by the fact that 13 is a very popular round to mass send.  You will need strong piercing to clear this round, and it is helpful to have some tanks that do not have heavy armor as they will last longer.<div class="send_threat threat_high">This round poses a medium to high risk of additional sends</div>';
+
+  } else if ( level == 14 ) {
+
+    output = 'Level 14 is the second most popular level to try and end the game on, as the level itself is difficult even without sends.  If the enemy team did not send on 13, expect a massive send on this level! You will need strong normal damage, especially ranged, along with tanks that can survive long enough for your units in back to deal their damage.<div class="send_threat threat_high">This round poses an extremely high risk of additional sends</div>';
+  } else if ( level == 15 ) {
+
+    output = 'Level 15 is very similar to level 14 in terms of value requirements, but it is easier.  The round carries a lower risk of send due to the fact that most teams will have sent on 13 or 14. In the event the enemy team did not send on 13 or 14, having lots of magic damage helps on this level.<div class="send_threat threat_medium">This round poses a low to medium risk of additional sends</div>';
+
+  } else if ( level == 16 ) {
+
+    output = 'Level 16 is very hard by itself, and because it is ranged, having tanks that do not have heavy armor is important.  Very strong piercing damage will help a lot to clear this round, but having tanks that don\'t die instantly is also just as important. If the enemy team did not send on 13 or 14, they are most likely gearing up for a big send either on this round, or on 17.  Players should try not to ever CC this level. <div class="send_threat threat_medium">This round poses a medium to high risk of additional sends</div>';
+
+  } else if ( level == 17 ) {
+
+    output = 'Level 17 is probably the hardest level in the entire game, due mainly to the fact that siege damage prior to this round has been more of an afterthought and less of an absolute requirement.  Level 17 can only really be cleared with either an insane value, or with tons and tons of units that deal siege damage.  Because it is so difficult by itself, expect and fully prepare for the largest send of the game here.  Most games do not go past this level.<div class="send_threat threat_high">This round poses a maximum risk of additional sends!</div>';
   }
+
 
 
   if ( output == '' ) {
