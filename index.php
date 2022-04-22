@@ -11,6 +11,25 @@ $dotenv->load();
 
 <script>
 
+  var display_type = 'desktop';
+
+  function check_display_type() {
+    header_display(css_media_width) // Call listener function at run time
+    css_media_width.addListener(header_display); // Attach listener function on state changes
+  }
+
+  function header_display(x) {
+    if (x.matches) { // If media query matches
+      display_type = 'mobile';
+      show_tiny_header();
+    } else {
+
+    }
+  }
+
+  var css_media_width = window.matchMedia("(max-width: 500px)");
+  check_display_type();
+
   /* establish global variables */
   var primary_game_mode     = '';
   var secondary_game_modes  = [];
@@ -36,16 +55,17 @@ $dotenv->load();
 
 <body>
 
-  <div class="tiny_header" style="display: none;">
+  <div class="tiny_header hideme" style="display: none;">
     <div class="th_item th_title">LTD Players Guide</div>
     <div class="th_item th_discord"><i class="fab fa-discord th_icon"></i></div>
     <div class="th_item th_home">home</div>
-    <div class="th_item th_modes">game modes</div>
-    <div class="th_item th_builders">builders</div>
+    <div class="th_item th_modes">modes</div>
     <div class="th_item th_units">units</div>
     <div class="th_item th_levels">levels</div>
+    <div class="th_item th_login">login</div>
+
     <div class="th_item th_filter">
-      <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt">
+      <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt hideme">
         <label>
           <div class="filter_text_alt">Filter</div>
           <input id="th_filter" type="search">
@@ -54,7 +74,7 @@ $dotenv->load();
     </div>
   </div>
 
-  <div class="header">
+  <div class="header hideme">
 
     <div class="top_header">
       <div class="left_header">
@@ -137,6 +157,8 @@ $('.th_item').click(function() {
     $('#units').trigger('click');
   } else if ( $(this).hasClass('th_levels') ) {
     $('#levels').trigger('click');
+  } else if ( $(this).hasClass('th_login') ) {
+    open_login_prompt();
   }
 
 });
@@ -447,10 +469,13 @@ function show_home() {
 
   $(".lb_holder").html(html);
 
+  set_legion_body_height();
+
 }
 
 function show_modes() {
 
+  check_display_type();
   primary_game_mode = '';
   secondary_game_modes = [];
 
@@ -1162,7 +1187,7 @@ function show_units() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels</span> page for all users</div></div>'+
+      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.  Use the <span>filter</span> at the top of the page to quickly search for any words that exist anywhere on the page.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels</span> page for all users</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -1222,7 +1247,7 @@ function show_units() {
             '<div class="no_strategy_holder">'+
               '<div id="ns_'+ unit_id +'" data-unit-id="'+ unit_id +'" class="no_strategy_text">No basic strategy exists yet for this unit.  If you want to help the community, consider <span>adding one</span>!</div>'+
               '<div class="new_strategy_holder textarea_hidden">'+
-                '<textarea style="resize: none;" class="new_strategy_textarea" id="text_'+ unit_id +'" name="text_'+ unit_id +'" rows="4" cols="50"></textarea>'+
+                '<textarea style="resize: none;" class="new_strategy_textarea" id="text_alt_'+ unit_id +'" name="text_alt'+ unit_id +'" rows="4" cols="50"></textarea>'+
                 '<div class="textarea_buttons_holder">'+
                   '<div class="textarea_button"><i id="confirm_'+ unit_id +'" class="far fa-check-square confirm_button"></i></div>'+
                   '<div class="textarea_button"><i id="cancel_'+ unit_id +'" class="far fa-window-close cancel_button"></i></div>'+
@@ -1250,7 +1275,7 @@ function show_units() {
                     && user_data[r].audit_field == good_string
                     && user_data[r].audit_value == 1
                  ) {
-                console.log('good match in user_data['+r+']');
+
                 good_class        = ' already_marked_good';
                 good_icon_class   = ' uprated';
                 good_title        = 'You have already marked this item';
@@ -1405,7 +1430,7 @@ $(document).on('click', '.no_strategy_text', function() {
   var this_unit_id = $(this).data('unitId');
 
   $(this).addClass('textarea_hidden');
-  $('#text_' + this_unit_id).parent().addClass('textarea_shown');
+  $('#text_alt_' + this_unit_id).parent().addClass('textarea_shown');
 
 });
 
@@ -1420,7 +1445,7 @@ $(document).on('click', '.cancel_button_alt', function() {
 $(document).on('click', '.confirm_button_alt', function() {
 
   var this_unit_id = $(this).attr('id').replace('confirm_', '');
-  var new_unit_text = $('#text_' + this_unit_id).val();
+  var new_unit_text = $('#text_alt_' + this_unit_id).val();
 
   $.ajax({
     type: "POST",
@@ -1502,6 +1527,10 @@ function fooasdf(foo) {
 $(document).on('click', '.edit_strategy', function() {
 
   var existing_strategy = $(this).parent().parent().find('.strategy_text').text();
+  if ( existing_strategy == 'No basic strategy exists yet for this unit.  If you want to help the community, consider adding one!' ) {
+    existing_strategy = '';
+  }
+
   var unit_id = $(this).parent().attr('id').replace('strategy_', '');
 
   $(this).parent().parent().find('.strategy_text').addClass('textarea_hidden');
@@ -1832,6 +1861,8 @@ var duration = 200;
 
 function show_tiny_header() {
 
+  console.log('showing tiny header');
+
   $('.header').removeClass('grow_header').addClass('shrink_header');
   $('.header').fadeOut({
     duration: duration,
@@ -1854,6 +1885,10 @@ function show_tiny_header() {
 }
 
 function hide_tiny_header() {
+
+  if ( display_type == 'mobile' ) {
+    return false;
+  }
 
   $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
   $('.tiny_header').fadeOut({
@@ -1892,7 +1927,6 @@ $('.legion_body').scroll(function (event) {
   if ( scroll > 1 ) {
     show_tiny_header();
     filter_visibility = visible_on_screen('units_table_filter');
-    console.log(filter_visibility);
   } else {
     //hide_tiny_header();
   }
@@ -1969,12 +2003,19 @@ function preload_data() {
 $(document).ready(function() {
 
   set_legion_body_height();
+
   $("#home").click();
+
+  check_display_type();
+
+  set_legion_body_height();
 
   if ( logged_in == 1 ) {
     $('.login_status').addClass('logged_in');
   }
 
 })
+
+
 
 </script>

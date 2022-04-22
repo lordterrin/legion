@@ -1,0 +1,162 @@
+
+/* MOBILE */
+/* MOBILE */
+/* MOBILE */
+@media only screen and (max-device-width: 500px) {
+
+  .hideme {
+    display: none;
+  }
+
+  .swal2-container.swal2-center>.swal2-popup {
+    zoom: 0.65;
+  }
+
+  .lb_modes_holder {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .current_game_mode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mode_output {
+    flex-direction: column;
+  }
+
+  .mo_primary {
+    padding: 20px;
+    width: auto;
+  }
+
+  .mo_secondary {
+    margin-right: 9px;
+    width: auto;
+  }
+
+  .modes_holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    max-height: 44px;
+    position: fixed;
+    bottom: 50px;
+    max-width: 100%;
+    background: rgb(13 13 14);
+    border-top: 3px solid white;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    padding-top: 12px;
+  }
+
+  .s_mode {
+    padding: 0px 5px 0px 8px;
+    cursor: pointer;
+    margin-left: 3px;
+    margin-right: 0px;
+    background: rgb(40 35 58);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9px;
+    transition: all 300ms;
+    height: 32px;
+    width: 32px;
+  }
+
+  .s_class_selected {
+    background: rgb(100 92 129);
+    border: none;
+    text-shadow: 0px 0px 5px black;
+  }
+
+  .lb_home {
+    width: 90%;
+    font-size: 16px;
+    padding-top: 0px;
+  }
+
+  .lb_text {
+    padding: 17px;
+    font-size: 12px;
+  }
+
+  .lb_title {
+    font-size: 44px;
+  }
+
+  .th_icon {
+    font-size: 28px;
+    position: relative;
+    top: 2px;
+  }
+
+  .th_title {
+    display: none;
+  }
+
+  .tiny_header {
+  	display: flex;
+    height: 80px;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .th_item {
+  	color: white;
+    font-family: Oswald;
+    font-weight: 100;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background-image: linear-gradient(#49474e, #595d60);
+    background-size: 0 1px, auto;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    transition: all .2s ease-out;
+    padding-bottom: 2px;
+  }
+
+  .th_item:hover {
+    background-size: 100% 3px, auto;
+  }
+
+  .th_title {
+    max-width: 50px;
+    text-align: center;
+    text-shadow: 0px 0px 3px rgb(0 0 0);
+    font-weight: 900;
+  }
+
+  .dataTables_filter_alt {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .dataTables_filter_alt label {
+
+  }
+
+  .filter_text_alt {
+
+  }
+
+  .dataTables_filter_alt input {
+
+  }
+
+
+
+
+
+
+
+} /* close @media only */
