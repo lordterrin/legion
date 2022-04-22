@@ -239,7 +239,7 @@ $('.th_item').click(function() {
   } else if ( $(this).hasClass('th_levels') ) {
     $('#levels').trigger('click');
   } else if ( $(this).hasClass('th_login') ) {
-    open_login_prompt();
+    open_th_login_prompt();
   }
 
 });
@@ -258,6 +258,18 @@ $('.login_holder').click(function() {
   $('.login_holder').addClass('overflow_hidden');
   $('.home_left').addClass('left_open');
   $('.home_right').addClass('right_open');
+
+  setTimeout(function() {
+    open_login_prompt();
+  }, 1800);
+
+});
+
+$(document).on('click', '.th_login_holder', function() {
+
+  $('.th_login_holder').addClass('overflow_hidden');
+  $('.home_left').addClass('th_left_open');
+  $('.home_right').addClass('th_right_open');
 
   setTimeout(function() {
     open_login_prompt();
@@ -361,6 +373,44 @@ $(document).on('click', '.create_account', async function() {
   }
 
 })
+
+function open_th_login_prompt() {
+
+  var html = ''+
+  '<div class="th_login_master">'+
+    '<div title="Login and account creation" class="th_login_holder">'+
+      '<div class="login_status"></div>'+
+      '<img class="home_left" src="img/wc3_left.png">'+
+      '<img class="home_right" src="img/wc3_right.png">'+
+    '</div>'+
+  '</div>';
+
+  Swal.fire({
+    html: html,
+    width : 600,
+    showConfirmButton : false,
+    backdrop : true,
+    showCancelButton: false,
+    allowOutsideClick: true,
+    customClass: {
+      container: 'container-class',
+      popup: 'popup-class',
+      header: 'header-class',
+      title: 'title-class',
+      htmlContainer : 'html-container-class',
+      closeButton: 'close-button-class',
+      icon: 'icon-class',
+      image: 'image-class',
+      content: 'content-class',
+      input: 'input-class',
+      actions: 'actions-class',
+      confirmButton: 'confirm-button-class',
+      cancelButton: 'cancel-button-class',
+      footer: 'footer-class'
+    }
+  });
+
+}
 
 function open_login_prompt() {
 
