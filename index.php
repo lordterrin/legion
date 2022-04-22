@@ -742,7 +742,7 @@ function show_modes() {
 
 $(document).on('click', '.copy_gamemode', function() {
   copyTextToClipboard(primary_game_mode + '' + sgm_string);
-  alertify.success('Copied to clipboard!');
+  alertify.warning('Copied to clipboard!');
 });
 
 function fallbackCopyTextToClipboard(text) {
@@ -1398,7 +1398,7 @@ function show_units() {
 
           var rate_unit_html = ''
 
-          if ( unit_strategy == null ) {
+          if ( unit_strategy == null || unit_strategy == '' ) {
             unit_strategy = ''+
             '<div class="no_strategy_holder">'+
               '<div id="ns_'+ unit_id +'" data-unit-id="'+ unit_id +'" class="no_strategy_text">No basic strategy exists yet for this unit.  If you want to help the community, consider <span>adding one</span>!</div>'+
@@ -1581,6 +1581,8 @@ function show_units() {
 
 $(document).on('click', '.no_strategy_text', function() {
 
+  return false;
+
   var this_unit_id = $(this).data('unitId');
 
   $(this).addClass('textarea_hidden');
@@ -1600,6 +1602,10 @@ $(document).on('click', '.confirm_button_alt', function() {
 
   var this_unit_id = $(this).attr('id').replace('confirm_', '');
   var new_unit_text = $('#text_alt_' + this_unit_id).val();
+
+  if ( new_unit_text == '' || new_unit_text == null || new_unit_text == undefined ) {
+    new_unit_text = $('#text_' + this_unit_id).val();
+  }
 
   $.ajax({
     type: "POST",
