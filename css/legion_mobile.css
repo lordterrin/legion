@@ -9,7 +9,17 @@
   }
 
   .swal2-container.swal2-center>.swal2-popup {
-    zoom: 0.65;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+  }
+
+  .create_account {
+    background: rgb(154 160 197);
+    width: 150px;
+    height: 49px;
+    align-self: center;
+    margin-top: 58px;
   }
 
   .lb_modes_holder {
@@ -102,7 +112,7 @@
   }
 
   .lb_home {
-    width: 90%;
+    width: 95%;
     font-size: 16px;
     padding-top: 0px;
   }
@@ -158,6 +168,11 @@
     font-weight: 900;
   }
 
+  .dataTables_filter {
+    opacity: 0;
+    display: none;
+  }
+
   .dataTables_filter_alt {
     position: absolute;
     top: 80px;
@@ -181,6 +196,7 @@
 
   .levels_master_holder {
     max-width: 100%;
+    margin-bottom: 25px;
   }
 
   .levels_item_holder {
@@ -208,7 +224,13 @@
     min-width: 68px;
   }
 
+  /* units */
   .item_builder, .item_damage_type, .item_armor_type {
+    display: none;
+  }
+
+  /* levels */
+  .item_attack_type, .item_armor_type {
     display: none;
   }
 
@@ -276,6 +298,71 @@
 
   .legion_td {
 
+  }
+
+  .send_threat {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .levels_units_holder {
+    align-items: flex-start;
+  }
+
+  .levels_units_title {
+    font-size: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .th_footer_filter {
+    position: absolute;
+    width: 100vw;
+    background: rgb(32 29 40);
+    height: 94px;
+    border-top: 5px solid rgb(52 52 45);
+  }
+
+  .th_footer_filter .filter_text, .filter_text_alt {
+    top: 9px;
+    left: -4px;
+    font-size: 19px;
+    color: grey;
+  }
+
+  .th_footer_filter .dataTables_filter_alt {
+    position: absolute;
+    top: 5px;
+    left: 0px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    color: rgb(65 63 70) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(32 29 40);
+  }
+
+  .th_footer_filter .dataTables_filter_alt label {
+    height: 50px;
+    position: relative;
+    top: 0px;
+    background: rgb(32 29 40);
+    border: none;
+    border-radius: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: 0px;
+    margin-right: 0px;
+    color: rgb(201 204 241);
+    width: 95%;
+  }
+
+  .th_footer_filter .dataTables_filter_alt input {
+    height: 40px !important;
+    top: 8px;
+    width: 80% !important;
   }
 
 

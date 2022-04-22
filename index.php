@@ -14,6 +14,18 @@ $dotenv->load();
   var display_type = 'desktop';
   var current_page = '';
 
+  function toggle_footer_search() {
+    if ( display_type == 'mobile' ) {
+      if ( current_page == 'units' || current_page == 'levels' ) {
+        $('.legion_footer .th_footer_filter').removeClass('hideme');
+      } else {
+        $('.legion_footer .th_footer_filter').addClass('hideme');
+      }
+    } else {
+      $('.legion_footer .th_footer_filter').addClass('hideme');
+    }
+  }
+
   function check_display_type() {
     header_display(css_media_width) // Call listener function at run time
     css_media_width.addListener(header_display); // Attach listener function on state changes
@@ -126,6 +138,16 @@ $dotenv->load();
 
 
   <div class="legion_footer">
+
+    <div class="th_footer_filter hideme">
+      <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt">
+        <label>
+          <div class="filter_text_alt">Filter</div>
+          <input id="th_filter" type="search">
+        </label>
+      </div>
+    </div>
+
     <div class="footer_item">(c)2022</div>
     <div class="footer_item" onclick="about_swal()">About</div>
     <div class="footer_item">Home</div>
@@ -449,6 +471,7 @@ function toggle_visibility(id) {
 function show_home() {
 
   current_page = 'home';
+  toggle_footer_search();
 
   html = ''+
   '<div class="lb_title">'+
@@ -480,6 +503,7 @@ function show_modes() {
 
   current_page = 'modes';
   check_display_type();
+  toggle_footer_search();
 
   primary_game_mode = '';
   secondary_game_modes = [];
@@ -1187,6 +1211,7 @@ function get_builder_photo(builder) {
 function show_units() {
 
   current_page = 'units';
+  toggle_footer_search();
 
   html = ''+
   '<div class="lb_title">'+
@@ -1655,6 +1680,9 @@ function get_final_creep_name(creep_name) {
 
 function show_levels() {
 
+  current_page = 'levels';
+  toggle_footer_search();
+
   html = ''+
   '<div class="lb_title">'+
   'Levels'+
@@ -1725,25 +1753,25 @@ function show_levels() {
 
               '<div class="levels_item">'+
 
-                '<div class="item">'+
+                '<div class="item item_attack_type">'+
                   '<div class="levels_item_title">Attack Type</div>'+
                   '<div class="levels_item_image">'+ attack_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ attack_type +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_armor_type">'+
                   '<div class="levels_item_title">Armor Type</div>'+
                   '<div class="levels_item_image">'+ armor_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ armor_type +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_strong_against">'+
                   '<div class="levels_item_title">Strong Against</div>'+
                   '<div class="levels_item_image">'+ strong_against_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ strong_against +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_weak_to">'+
                   '<div class="levels_item_title">Weak To</div>'+
                   '<div class="levels_item_image">'+ weak_to_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ weak_to +'</div>'+
