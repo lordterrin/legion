@@ -21,6 +21,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 2px solid rgb(109 59 59);
+    background: rgb(0 0 0);
+    border-radius: 6px;
+    font-family: 'Ubuntu';
+    position: relative;
+    top: -4px;
+    min-height: 45px;
+    min-width: 204px;
+    font-size: 17px;
   }
 
   .mode_output {
