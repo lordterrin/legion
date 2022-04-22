@@ -1,5 +1,16 @@
 /* css */
 
+/* all fonts
+
+	font-family: Oswald;
+	font-family: Ubuntu;
+	font-family: "Fredoka One";
+	font-family: "Anek Odia";
+
+
+
+*/
+
 :root {
   --main-bg-color: linear-gradient(162deg, rgba(51,50,56,1) 0%, rgba(82,82,101,1) 57%, rgba(6,6,6,1) 100%);
   --header-bg-color: transparent;
@@ -21,6 +32,12 @@ body {
 
 a {
 	color: var(--hyperlink-color);
+}
+
+a:hover {
+	color: #6ba9d6;
+  text-decoration: underline;
+  text-shadow: 0px 0px 1px white;
 }
 
 /* ===== Scrollbar CSS ===== */
@@ -235,7 +252,7 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .lb_title {
 	font-family: "Fredoka One";
-  font-size: 62px;
+  font-size: 50px;
   color: #debebe;
   text-shadow: 0px 0px 41px white;
   letter-spacing: 4px;
@@ -498,7 +515,8 @@ body.swal2-shown > [aria-hidden="true"] {
   flex-direction: row;
   width: 100%;
   justify-content: space-evenly;
-  max-height: 70px;
+  flex-wrap: wrap;
+  font-family: Oswald;
 }
 
 .current_game_mode {
@@ -596,6 +614,12 @@ body.swal2-shown > [aria-hidden="true"] {
 	padding: 10px;
 }
 
+.hideme {
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+}
+
 .st_item_off {
 	opacity: 0;
   transition: all 300ms;
@@ -616,15 +640,17 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .primary_modes {
 	display: flex;
+	margin-bottom: 25px;
 }
 
 .secondary_modes {
 	display: flex;
+	margin-bottom: 25px;
 }
 
 .p_mode {
 	border: 2px solid rgb(14 9 34);
-  padding: 12px 20px 12px 20px;
+  padding: 5px 24px 12px 20px;
   cursor: pointer;
   margin-left: 10px;
   margin-right: 10px;
@@ -637,12 +663,13 @@ body.swal2-shown > [aria-hidden="true"] {
 }
 
 .p_class_selected {
-	border: 3px solid white;
+	background: rgb(20 19 22);
+  color: white;
 }
 
 .s_mode {
 	border: 2px solid rgb(14 9 34);
-  padding: 12px 20px 12px 20px;
+  padding: 5px 19px 12px 20px;
   cursor: pointer;
   margin-left: 10px;
   margin-right: 10px;
@@ -652,10 +679,12 @@ body.swal2-shown > [aria-hidden="true"] {
   align-items: center;
   border-radius: 9px;
   transition: all 300ms;
+  color: rgb(105 96 136);
 }
 
 .s_class_selected {
-	border: 3px solid white;
+	background: rgb(20 19 22);
+  color: white;
 }
 
 .p_mode:hover {
@@ -738,6 +767,9 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .levels_item {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	width: 100%;
 }
 
 .levels_item_column {
@@ -749,7 +781,7 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .levels_item_title {
 	color: rgb(251 104 104);
-	font-size: 19px;
+	font-size: 17px;
 }
 
 .levels_item_subtitle {
@@ -940,7 +972,7 @@ body.swal2-shown > [aria-hidden="true"] {
 }
 
 .upgrade_photos {
-	min-width: 160px;
+	/* min-width: 160px; */
 	text-align: center;
 }
 
@@ -972,8 +1004,7 @@ body.swal2-shown > [aria-hidden="true"] {
   justify-content: center;
   align-items: center;
   margin-left: 15px;
-  margin-right: 15px;
-  min-width: 150px;
+  margin-right: 45px;
 }
 
 .rate_unit_master_holder {
@@ -985,7 +1016,8 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .rate_unit_section {
 	display: flex;
-  justify-content: space-evenly;
+	flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   margin-bottom: 15px
 }

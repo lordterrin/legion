@@ -9,6 +9,9 @@ $dotenv->load();
 
 ?>
 
+<?php include 'header.php';?>
+<?php include 'footer.php';?>
+
 <script>
 
   var display_type = 'desktop';
@@ -36,7 +39,7 @@ $dotenv->load();
       display_type = 'mobile';
       show_tiny_header();
     } else {
-
+      hide_tiny_header();
     }
   }
 
@@ -58,10 +61,65 @@ $dotenv->load();
     var user_id   = 0;
   }
 
+  var duration = 200;
+
+function show_tiny_header() {
+
+  console.log('showing tiny header');
+
+  $('.header').removeClass('grow_header').addClass('shrink_header');
+  $('.header').fadeOut({
+    duration: duration,
+    complete : function() {
+
+      set_legion_body_height();
+
+      $('.tiny_header').addClass('grow_tiny_header').removeClass('shrink_tiny_header').removeClass('hideme');
+      $('.tiny_header').fadeIn({
+        duration: duration,
+        complete : function() {
+          if ( display_type == 'desktop' ) {
+            if ( current_page == 'units' || current_page == 'levels' ) {
+              $('.dataTables_filter_alt').removeClass('hideme');
+            } else {
+              $('.dataTables_filter_alt').addClass('hideme');
+            }
+          }
+        }
+      });
+
+    } // close complete
+  });
+
+
+}
+
+function hide_tiny_header() {
+
+  if ( display_type == 'mobile' ) {
+    return false;
+  }
+
+  $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
+  $('.tiny_header').fadeOut({
+    duration: duration,
+    complete : function() {
+
+      set_legion_body_height();
+
+      $('.header').removeClass('hideme');
+      $('.header').addClass('grow_header').removeClass('shrink_header');
+      $('.header, .subheader').fadeIn({
+        duration: duration
+      });
+
+    } // close complete
+  })
+
+}
+
 </script>
 
-<?php include 'header.php';?>
-<?php include 'footer.php';?>
 <?php include 'subpages/home.php';?>
 <?php include 'subpages/builders.php';?>
 <?php include 'preload.php';?>
@@ -299,7 +357,7 @@ $(document).on('click', '.create_account', async function() {
     $('.create_account').addClass('no_click_lowpacity');
 
   } else {
-    reject(create_user);
+    Swal.showValidationMessage(create_user);
   }
 
 })
@@ -480,7 +538,7 @@ function show_home() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> maps created by SchachMatt.  Much of the content here is applicable to other versions of Legion TD as well.'+
+      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> maps by SchachMatt.  Much of the content here is applicable to other versions of Legion TD as well.'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -488,7 +546,7 @@ function show_home() {
     '</div>'+
 
     '<div class="lb_text">'+
-      'To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="https://discord.gg/n5tWRPgqJm"> visit the discord</a>'+
+      'Legion TD was first created by Lisk in 2009.  He has gone on to develop the standalone game <a href="https://legiontd2.com">Legion TD 2</a>, which is available on Steam.  Once he began work on this new game, he made the original source code for his map available to others, and many developers have stepped in create new and modified versions of the game over the years, including HuanAk and Team OZE.  As of today, the most popular version of the map is the version created and maintained by SchachMatt. To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="https://discord.gg/n5tWRPgqJm"> visit the discord</a>'+
     '</div>'+
 
   '</div>';
@@ -841,22 +899,22 @@ function add_secondary_game_mode(mode) {
   }
 
   if ( cc_exists == 1 && mode == 'ac' ) {
-    alertify.error('<span>cc</span> and <span>ac</span> cannot be used together');
+    alertify.warning('<span>cc</span> and <span>ac</span> cannot be used together');
     return false;
   }
 
   if ( ac_exists == 1 && mode == 'cc' ) {
-    alertify.error('<span>cc</span> and <span>ac</span> cannot be used together');
+    alertify.warning('<span>cc</span> and <span>ac</span> cannot be used together');
     return false;
   }
 
   if ( x3_exists == 1 && mode == 'x4' ) {
-    alertify.error('<span>x3</span> and <span>x4</span> cannot be used together');
+    alertify.warning('<span>x3</span> and <span>x4</span> cannot be used together');
     return false;
   }
 
   if ( x4_exists == 1 && mode == 'x3' ) {
-    alertify.error('<span>x3</span> and <span>x4</span> cannot be used together');
+    alertify.warning('<span>x3</span> and <span>x4</span> cannot be used together');
     return false;
   }
 
@@ -1052,6 +1110,18 @@ function get_strategy_text(level) {
   } else if ( level == 17 ) {
 
     output = 'Level 17 is probably the hardest level in the entire game, due mainly to the fact that siege damage prior to this round has been more of an afterthought and less of an absolute requirement.  Level 17 can only really be cleared with either an insane value, or with tons and tons of units that deal siege damage.  Because it is so difficult by itself, expect and fully prepare for the largest send of the game here.  Most games do not go past this level.<div class="send_threat threat_high">This round poses a maximum risk of additional sends!</div>';
+
+  } else if ( level == 18 ) {
+
+    output = 'Level 18 is not an exceptionally difficult level, but players with all heavy armor tanks can have a difficult time clearing this as the magic attack wipes them out pretty easily.  If you have all heavy armor tanks, it is probably not a good idea to <span>cc</span> here.<div class="send_threat threat_low">This round poses a low risk of additional sends</div>';
+
+  } else if ( level == 19 ) {
+
+    output = 'Level 19 is the last level before the second boss round, and is typically not a hard level.  Both teams are generally saving for a big send on 20, and there is very low chance here of teams <span>bombing</span> each other.  While piercing damage is important for this round, you will typically not need to build more than you already have.  Instead, you should take this round to prepare for level 20.  <div class="send_threat threat_low">This round poses a low risk of additional sends</div>';
+
+  } else if ( level == 20 ) {
+
+    output = 'Level 20 is the second, and usually final boss level. To beat this level, it is very beneficial to have units that slow attack speed, on top of a lot of magic damage.  Very few games go past level 20 due to the difficult of the level by itself in addition to both teams sending as many additional sends as they can.<div class="send_threat threat_high">This round poses a maximum risk of additional sends!</div>';
   }
 
 
@@ -1389,14 +1459,12 @@ function show_units() {
             '<div class="levels_item_holder">'+
 
               '<div class="levels_item">'+
+
                 '<div class="unit_name_holder">'+
                   '<div class="levels_item_title">'+ unit_name +'</div>'+
                   '<div class="levels_item_image">'+ unit_photo +'</div>'+
                   '<div class="levels_item_subtitle"></div>'+
                 '</div>'+
-              '</div>'+
-
-              '<div class="levels_item">'+
 
                 '<div class="item item_builder">'+
                   '<div class="levels_item_title">Builder</div>'+
@@ -1493,7 +1561,7 @@ $(document).on('click', '.confirm_button_alt', function() {
       foo = response;
 
       if ( foo == 'Please login first' ) {
-        alertify.error('Please login first');
+        alertify.warning('Please login first');
       }
 
       $('#strategy_' + this_unit_id).parent().find('.strategy_text').removeClass('textarea_hidden');
@@ -1536,7 +1604,7 @@ $(document).on('click', '.confirm_button', function() {
       console.log(foo);
 
       if ( foo == 'Please login first' ) {
-        alertify.error('Please login first');
+        alertify.warning('Please login first');
       }
 
       $('#strategy_' + this_unit_id).parent().find('.no_strategy_text').removeClass('textarea_hidden');
@@ -1552,6 +1620,11 @@ $(document).on('click', '.confirm_button', function() {
 });
 
 $(document).on('click', '.edit_strategy', function() {
+
+  if ( logged_in == 0 ) {
+    alertify.warning('Please login first');
+    return false;
+  }
 
   var existing_strategy = $(this).parent().parent().find('.strategy_text').text();
   if ( existing_strategy == 'No basic strategy exists yet for this unit.  If you want to help the community, consider adding one!' ) {
@@ -1573,6 +1646,11 @@ $(document).on('click', '.edit_strategy', function() {
 
 function rate_up(data) {
 
+  if ( logged_in == 0 ) {
+    alertify.warning('Please login first');
+    return false;
+  }
+
   this_item = data;
   unit_id   = data.dataset.unitId;
   html_id   = data.id;
@@ -1593,6 +1671,11 @@ function rate_up(data) {
 }
 
 function rate_down(data) {
+
+  if ( logged_in == 0 ) {
+    alertify.warning('Please login first');
+    return false;
+  }
 
   this_item = data;
   unit_id   = data.dataset.unitId;
@@ -1630,6 +1713,11 @@ function change_unit_rating(unit_id, level, rating, action) {
     success: function(response) {
       foo = response;
       console.log(foo);
+
+      if ( foo == 'no user is logged in' ) {
+        alertify.warning('Please login first');
+      }
+
     },
     error: function(xhr, ajaxOptions, thrownError) {
       console.log(xhr.responseText);
@@ -1744,14 +1832,12 @@ function show_levels() {
             '<div class="levels_item_holder">'+
 
               '<div class="levels_item">'+
-                '<div class="item">'+
+
+                '<div class="item item_level">'+
                   '<div class="levels_item_title">Level '+ level +'</div>'+
                   '<div class="levels_item_image">'+ creep_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ creep_name +'</div>'+
                 '</div>'+
-              '</div>'+
-
-              '<div class="levels_item">'+
 
                 '<div class="item item_attack_type">'+
                   '<div class="levels_item_title">Attack Type</div>'+
@@ -1888,56 +1974,6 @@ $(document).on('keyup change paste', '#units_table_filter input', function() {
   foo = $(this).val();
   $('#th_filter').val(foo);
 });
-
-var duration = 200;
-
-function show_tiny_header() {
-
-  console.log('showing tiny header');
-
-  $('.header').removeClass('grow_header').addClass('shrink_header');
-  $('.header').fadeOut({
-    duration: duration,
-    complete : function() {
-
-      set_legion_body_height();
-
-      $('.tiny_header').addClass('grow_tiny_header').removeClass('shrink_tiny_header');
-      $('.tiny_header').fadeIn({
-        duration: duration,
-        complete : function() {
-
-        }
-      });
-
-    } // close complete
-  });
-
-
-}
-
-function hide_tiny_header() {
-
-  if ( display_type == 'mobile' ) {
-    return false;
-  }
-
-  $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
-  $('.tiny_header').fadeOut({
-    duration: duration,
-    complete : function() {
-
-      set_legion_body_height();
-
-      $('.header').addClass('grow_header').removeClass('shrink_header');
-      $('.header, .subheader').fadeIn({
-        duration: duration
-      });
-
-    } // close complete
-  })
-
-}
 
 function visible_on_screen(element) {
   try {
