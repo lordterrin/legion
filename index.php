@@ -12,6 +12,7 @@ $dotenv->load();
 <script>
 
   var display_type = 'desktop';
+  var current_page = '';
 
   function check_display_type() {
     header_display(css_media_width) // Call listener function at run time
@@ -447,6 +448,8 @@ function toggle_visibility(id) {
 
 function show_home() {
 
+  current_page = 'home';
+
   html = ''+
   '<div class="lb_title">'+
   'Home'+
@@ -475,7 +478,9 @@ function show_home() {
 
 function show_modes() {
 
+  current_page = 'modes';
   check_display_type();
+
   primary_game_mode = '';
   secondary_game_modes = [];
 
@@ -598,6 +603,7 @@ function show_modes() {
   $(".lb_holder").html(html);
 
   $('.legion_body').fadeIn(500);
+
 }
 
 $(document).on('click', '.copy_gamemode', function() {
@@ -1180,6 +1186,8 @@ function get_builder_photo(builder) {
 
 function show_units() {
 
+  current_page = 'units';
+
   html = ''+
   '<div class="lb_title">'+
   'Units'+
@@ -1215,8 +1223,9 @@ function show_units() {
     },
     'columnDefs'  : [
       {
-        'targets' : 0,
-        'data'    : function ( data, type, val, meta) {
+        'targets'   : 0,
+        'className' : 'legion_td',
+        'data'      : function ( data, type, val, meta) {
 
           var builder         = data.builder;
           var unit_name       = data.unit_name;
@@ -1257,7 +1266,7 @@ function show_units() {
 
           }
 
-          rate_unit_html += '<div class="rate_unit_section">';
+          rate_unit_html += '<div class="rate_unit_section one_to_ten">';
 
           for ( var p=1; p<11; p++ ) {
 
@@ -1312,7 +1321,7 @@ function show_units() {
             '</div>';
           }
 
-          rate_unit_html += '</div><div class="rate_unit_section">';
+          rate_unit_html += '</div><div class="rate_unit_section eleven_to_twenty">';
 
           for ( var p=11; p<21; p++ ) {
             rate_unit_html += ''+
@@ -1364,31 +1373,31 @@ function show_units() {
 
               '<div class="levels_item">'+
 
-                '<div class="item">'+
+                '<div class="item item_builder">'+
                   '<div class="levels_item_title">Builder</div>'+
                   '<div class="levels_item_image">'+ builder_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ builder +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_damage_type">'+
                   '<div class="levels_item_title">Damage Type</div>'+
                   '<div class="levels_item_image">'+ damage_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ damage_type +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_armor_type">'+
                   '<div class="levels_item_title">Armor Type</div>'+
                   '<div class="levels_item_image">'+ armor_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ armor_type +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_up_from">'+
                   '<div class="levels_item_title">Upgrades From</div>'+
                   '<div class="upgrade_photos">'+ upgrades_from_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ final_upgrades_from +'</div>'+
                 '</div>'+
 
-                '<div class="item">'+
+                '<div class="item item_up_to">'+
                   '<div class="levels_item_title">Upgrades Into</div>'+
                   '<div class="upgrade_photos">'+ upgrades_to_photo +'</div>'+
                   '<div class="levels_item_subtitle">'+ final_upgrades_to +'</div>'+
@@ -1517,13 +1526,6 @@ $(document).on('click', '.confirm_button', function() {
 
 });
 
-
-function fooasdf(foo) {
-
-
-
-}
-
 $(document).on('click', '.edit_strategy', function() {
 
   var existing_strategy = $(this).parent().parent().find('.strategy_text').text();
@@ -1612,6 +1614,8 @@ function change_unit_rating(unit_id, level, rating, action) {
 }
 
 function pre_show_levels() {
+
+  current_page = 'levels';
 
   $.ajax({
     url: "api/pull_units.php",
@@ -1924,7 +1928,7 @@ function visible_on_screen(element) {
 
 $('.legion_body').scroll(function (event) {
   var scroll = $('.legion_body').scrollTop();
-  if ( scroll > 1 ) {
+  if ( scroll > 1 && display_type == 'desktop' ) {
     show_tiny_header();
     filter_visibility = visible_on_screen('units_table_filter');
   } else {
@@ -1945,23 +1949,47 @@ $(document).on('keyup change paste', '#th_filter', function() {
 
 function set_legion_body_height() {
 
-  /* gather variables */
-  var a = $(window).height();
-  if ( $('.header').is(':visible') ) {
-    var b = $('.header').outerHeight();
-    var c = 0;  //$('.subheader').outerHeight();
+  if ( current_page == 'modes' ) {
+
+    console.log('set_fixed_body_height');
+    var a = $(window).height();
+    if ( $('.header').is(':visible') ) {
+      var b = $('.header').outerHeight();
+      var c = 0;  //$('.subheader').outerHeight();
+    } else {
+      var b = 0;
+      var c = $('.tiny_header').outerHeight();
+    }
+
+    var d = $('.modes_holder').outerHeight();
+    var e = $('.legion_footer').outerHeight();
+
+    var legion_body_height = a - (b+c+d+e);
+
+    $('.legion_body').height(legion_body_height);
+
   } else {
-    var b = 0;
-    var c = $('.tiny_header').outerHeight();
+
+    /* gather variables */
+    console.log('set_legion_body_height');
+    var a = $(window).height();
+    if ( $('.header').is(':visible') ) {
+      var b = $('.header').outerHeight();
+      var c = 0;  //$('.subheader').outerHeight();
+    } else {
+      var b = 0;
+      var c = $('.tiny_header').outerHeight();
+    }
+
+    var d = $('.legion_footer').outerHeight();
+
+    var legion_body_height = a - (b+c+d);
+
+    $('.legion_body').height(legion_body_height);
   }
 
-  var d = $('.legion_footer').outerHeight();
-
-  var legion_body_height = a - (b+c+d);
-
-  $('.legion_body').height(legion_body_height);
-
 }
+
 
 function preload_data() {
 
