@@ -273,6 +273,8 @@ $(document).on('click', '.th_login_holder', function() {
 
   setTimeout(function() {
     open_login_prompt();
+    $('.home_left').removeClass('th_left_open');
+    $('.home_right').removeClass('th_right_open');
   }, 1800);
 
 });
@@ -1831,6 +1833,10 @@ function show_levels() {
   //   '<div class="levels_holder"><div class="levels">20+</div></div>'+
   // '</div>'+
   '<div class="lb_home">'+
+
+    '<div class="lb_text">'+
+      'Legion TD contains 20-30 levels of intense action! Below you will find a general overview for each level, the damage and armor types for the units that spawn, as well as helpful information from the community on which specific towers do well here, and which ones you may want to avoid. <div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Head over to the <span>units</span> page and help!</div></div>'+
+    '</div>'+
 
     '<div class="lb_text">'+
       '<table id="levels_table" class="legion_table"></table>';
