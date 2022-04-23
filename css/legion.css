@@ -515,7 +515,7 @@ body.swal2-shown > [aria-hidden="true"] {
 .legion_footer {
 	position: fixed;
   bottom: 0;
-  height: 41px;
+  height: 64px;
   background: black;
   width: 100%;
   display: flex;

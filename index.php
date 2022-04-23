@@ -206,7 +206,7 @@ function hide_tiny_header() {
       </div>
     </div>
 
-    <div class="footer_item">(c)2022</div>
+    <div class="footer_item"></div>
     <div class="footer_item" onclick="about_swal()">About</div>
     <div class="footer_item">Home</div>
   </div>
@@ -282,7 +282,7 @@ $(document).on('click', '.th_login_holder', function() {
 function about_swal() {
   Swal.fire({
     title: "Created out of love for a 20 year old game.",
-    text : "Questions? Comments? Email me at lordterrin (at) gmail (dot) com"
+    html : 'Questions? Comments? Email me at lordterrin (at) gmail (dot) com.  The entire website is held in a <a href="https://github.com/lordterrin/legion">public git repo</a>.'
   })
 }
 
