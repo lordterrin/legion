@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="en">
   <head>
+
     <!-- Required meta tags  -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- favicones -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -31,7 +32,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- legion css -->
-    <link rel="stylesheet" href="css/legion.css">
+    <link rel="stylesheet" href="css/legion.css" />
+
+    <link rel="stylesheet" href="css/legion_mobile.css" media="only screen and (max-device-width: 500px)" />
 
     <title>Legion TD Guide 2</title>
   </head>

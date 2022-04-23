@@ -23,7 +23,7 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM `legiondb.db`.units;";
+$sql = "SELECT * FROM `legion_data`.units;";
 $result = $conn->query($sql);
 
 $output = [];
