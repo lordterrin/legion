@@ -2212,7 +2212,7 @@ function show_loader() {
     allowOutsideClick: false,
     width: '75%',
     customClass: {
-      container: '',
+      container: 'custom_container',
       popup: 'chooser_colors',
       header: 'chooser_colors',
       title: 'chooser_colors',
