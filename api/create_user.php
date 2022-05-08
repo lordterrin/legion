@@ -31,6 +31,13 @@ $password 	= $_POST['user_password'];
 $email 			= '';
 $created_at = date("Y-m-d H:i:s", time());
 
+$version 				= $_POST['version'];
+if ( $version == 'matt' ) {
+	$database = 'legion_data';
+} else if ( $version == 'oze' ) {
+	$database = 'legion_data_oze';
+}
+
 
 
 // Validate username
@@ -42,7 +49,7 @@ if(empty( $username )) {
     die();
 } else {
     // Prepare a select statement
-    $sql = "SELECT id FROM legion_data.users WHERE username = ?";
+    $sql = "SELECT id FROM $database.users WHERE username = ?";
 
     if($stmt = mysqli_prepare($conn, $sql)){
         // Bind variables to the prepared statement as parameters
@@ -85,7 +92,7 @@ if(empty(trim($_POST["user_password"]))){
 }
 
 // Prepare an insert statement
-$sql = "INSERT INTO legion_data.users (username, password) VALUES (?, ?)";
+$sql = "INSERT INTO $database.users (username, password) VALUES (?, ?)";
 if($stmt = mysqli_prepare($conn, $sql)){
   // Bind variables to the prepared statement as parameters
   mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);

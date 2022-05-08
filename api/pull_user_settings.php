@@ -23,6 +23,12 @@ if ( $user_id == 0 ) {
 	die();
 }
 
+$version 				= $_POST['version'];
+if ( $version == 'matt' ) {
+	$database = 'legion_data';
+} else if ( $version == 'oze' ) {
+	$database = 'legion_data_oze';
+}
 
 // Create connection
 $conn = new mysqli($servername, $username, $password);
@@ -37,7 +43,7 @@ id, 1_good, 1_bad, 2_good, 2_bad, 3_good, 3_bad, 4_good, 4_bad, 5_good, 5_bad, 6
   FROM `legion_data`.users where id = $user_id;";
 */
 
-$sql = "SELECT * from legion_data.units_audit where user_id = $user_id;";
+$sql = "SELECT * from $database.units_audit where user_id = $user_id;";
 $result = $conn->query($sql);
 
 $output = [];

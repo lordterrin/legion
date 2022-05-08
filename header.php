@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald|Ubuntu|Fredoka+One|Anek+Odia">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald|Ubuntu|Fredoka+One|Anek+Odia|Comforter+Brush">
 
     <!-- alertify.js -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
@@ -30,6 +30,8 @@
 
     <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 
     <!-- legion css -->
     <link rel="stylesheet" href="css/legion.css" />

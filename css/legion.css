@@ -45,7 +45,34 @@ a:hover {
 	font-size: 17px;
 	color: black !important;
 	text-shadow: none !important;
+}
 
+.loader_holder {
+  min-height: 50vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background: rgb(105 105 133);
+}
+
+.chooser_colors {
+	background: rgb(105 105 133) !important;
+	color: rgb(133 133 164) !important;
+  font-family: Oswald;
+}
+
+.choose_matt, .choose_oze {
+	font-family: "Comforter Brush";
+	font-size: 76px;
+	transition: all 500ms;
+	color: white;
+	text-shadow: 0px 0px 6px rgb(215 115 211);
+	cursor: pointer;
+}
+
+.choose_matt:hover, .choose_oze:hover {
+	transition: all 500ms;
+	text-shadow: 3px -6px 23px rgb(255 1 245), 0px 0px 15px, 0px 0px 3px black;
 }
 
 /* ===== Scrollbar CSS ===== */

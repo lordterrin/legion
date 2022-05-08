@@ -14,8 +14,9 @@ $dotenv->load();
 
 <script>
 
-  var display_type = 'desktop';
-  var current_page = '';
+  var display_type  = 'desktop';
+  var current_page  = '';
+  var version       = '';
 
   function toggle_footer_search() {
     if ( display_type == 'mobile' ) {
@@ -153,7 +154,7 @@ function hide_tiny_header() {
         <div class="left_header_subtitle">For Warcraft 3 Legion TD 9.5+ by SchachMatt</div>
       </div>
       <div class="right_header">
-        <div class="left_header_item">Discord: <a target="_blank" href="https://discord.gg/n5tWRPgqJm">https://discord.gg/n5tWRPgqJm</a></div>
+        <div class="left_header_item">Discord: <a id="top_discord_link" target="_blank" href="">https://discord.gg/n5tWRPgqJm</a></div>
         <div title="Login and account creation" class="login_holder">
           <div class="login_status"></div>
           <img class="home_left" src="img/wc3_left.png">
@@ -227,7 +228,7 @@ $('.th_item').click(function() {
     $('#home').trigger('click');
     hide_tiny_header();
   } else if ( $(this).hasClass('th_discord') ) {
-    window.open('https://discord.gg/n5tWRPgqJm', '_blank');
+    window.open(discord_link, '_blank');
   } else if ( $(this).hasClass('th_home') ) {
     $('#home').trigger('click');
     hide_tiny_header();
@@ -298,6 +299,7 @@ function create_new_user(user_username, user_password) {
       data: {
         user_username : user_username,
         user_password : user_password,
+        version       : version,
       },
       success: function(response) {
         console.log('2: before resolve');
@@ -321,6 +323,7 @@ function log_user_in(user_username, user_password) {
       data: {
         user_username : user_username,
         user_password : user_password,
+        version       : version,
       },
       success: function(response) {
         console.log('2: before resolve');
@@ -590,7 +593,7 @@ function show_home() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> maps by SchachMatt.  Much of the content here is applicable to other versions of Legion TD as well.'+
+      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> map.  Much of the content here is applicable to other versions of Legion TD as well.'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -598,7 +601,7 @@ function show_home() {
     '</div>'+
 
     '<div class="lb_text">'+
-      'Legion TD was first created by Lisk in 2009.  He has gone on to develop the standalone game <a href="https://legiontd2.com">Legion TD 2</a>, which is available on Steam.  Once he began work on this new game, he made the original source code for his map available to others, and many developers have stepped in create new and modified versions of the game over the years, including HuanAk and Team OZE.  As of today, the most popular version of the map is the version created and maintained by SchachMatt. To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="https://discord.gg/n5tWRPgqJm"> visit the discord</a>'+
+      'Legion TD was first created by Lisk in 2009.  He has gone on to develop the standalone game <a href="https://legiontd2.com">Legion TD 2</a>, which is available on Steam.  Once he began work on this new game, he made the original source code for his map available to others, and many developers have stepped in create new and modified versions of the game over the years, including SchachMatt, HuanAk and Team OZE.  As of today, the two most popular versions of the map are the version created and maintained by SchachMatt, and the version created and maintained by Team OZE. To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="'+ discord_link +'"> visit the discord</a>'+
     '</div>'+
 
   '</div>';
@@ -1613,6 +1616,7 @@ $(document).on('click', '.confirm_button_alt', function() {
     data: {
       new_unit_text : new_unit_text,
       unit_id       : this_unit_id,
+      version       : version,
     },
     success: function(response) {
 
@@ -1656,6 +1660,7 @@ $(document).on('click', '.confirm_button', function() {
     data: {
       new_unit_text : new_unit_text,
       unit_id       : this_unit_id,
+      version       : version,
     },
     success: function(response) {
       foo = response;
@@ -1763,10 +1768,11 @@ function change_unit_rating(unit_id, level, rating, action) {
     type: "POST",
     url: "api/change_unit_rating.php",
     data: {
-      unit_id : unit_id,
-      level   : level,
-      rating  : rating,
-      action  : action,
+      unit_id   : unit_id,
+      level     : level,
+      rating    : rating,
+      action    : action,
+      version   : version,
     },
     success: function(response) {
       foo = response;
@@ -1789,7 +1795,11 @@ function pre_show_levels() {
   current_page = 'levels';
 
   $.ajax({
+    type: 'POST',
     url: "api/pull_units.php",
+    data: {
+      version : version,
+    },
     success: function(result){
         try {
 
@@ -2121,6 +2131,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_units.php",
+    type: 'POST',
+    data : {
+      version  : version,
+    },
     success: function(result){
         try {
           units_data = JSON.parse(result);
@@ -2132,6 +2146,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_levels.php",
+    type: 'POST',
+    data : {
+      version  : version,
+    },
     success: function(result){
         try {
           levels_data = JSON.parse(result);
@@ -2143,6 +2161,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_user_settings.php",
+    type: 'POST',
+    data : {
+      version : version,
+    },
     success: function(result){
         try {
           user_data = JSON.parse(result);
@@ -2158,17 +2180,85 @@ $(document).ready(function() {
 
   set_legion_body_height();
 
-  $("#home").click();
-
   check_display_type();
 
   set_legion_body_height();
+
+  show_loader();
 
   if ( logged_in == 1 ) {
     $('.login_status').addClass('logged_in');
   }
 
-})
+});
+
+function show_loader() {
+
+  html = ''+
+  '<div class="loader_holder">'+
+    '<div class="choose_matt">'+
+      'SchachMatt'+
+    '</div>'+
+    '<div class="choose_oze">'+
+      'Team OZE'+
+    '</div>'+
+  '</div>'+
+  '';
+
+  Swal.fire({
+    title: "Choose Your Legion TD Version",
+    html : html,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    width: '75%',
+    customClass: {
+      container: '',
+      popup: 'chooser_colors',
+      header: 'chooser_colors',
+      title: 'chooser_colors',
+      closeButton: 'chooser_colors',
+      icon: 'chooser_colors',
+      image: 'chooser_colors',
+      content: 'chooser_colors',
+      htmlContainer: 'chooser_colors',
+      input: 'chooser_colors',
+      inputLabel: 'chooser_colors',
+      validationMessage: 'chooser_colors',
+      actions: 'chooser_colors',
+      confirmButton: 'chooser_colors',
+      denyButton: 'chooser_colors',
+      cancelButton: 'chooser_colors',
+      loader: 'chooser_colors',
+      footer: 'chooser_colors.',
+      timerProgressBar: 'chooser_colors.',
+    }
+  })
+
+}
+
+$(document).on('click', '.choose_matt', function() {
+  version = 'matt';
+  swal.close();
+  discord_link = 'https://discord.gg/n5tWRPgqJm';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 9.5+ by SchachMatt');
+  $('.th_title').html('LTD Players Guide: SchachMatt');
+  $("#home").click();
+  preload_data();
+});
+
+$(document).on('click', '.choose_oze', function() {
+  version = 'oze';
+  swal.close();
+  discord_link = 'https://discord.gg/4bnCZPhq';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
+  $('.th_title').html('LTD Players Guide: Team OZE');
+  $("#home").click();
+  preload_data();
+});
 
 
 
