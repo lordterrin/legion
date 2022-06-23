@@ -31,13 +31,8 @@ $password 	= $_POST['user_password'];
 $version 		= $_POST['version'];
 $email 			= '';
 $created_at = date("Y-m-d H:i:s", time());
+$database = 'legion_data';
 
-$version 				= $_POST['version'];
-if ( $version == 'matt' ) {
-	$database = 'legion_data';
-} else if ( $version == 'oze' ) {
-	$database = 'legion_data_oze';
-}
 
 
 
@@ -50,7 +45,7 @@ if(empty( $username )) {
     die();
 } else {
     // Prepare a select statement
-    $sql = "SELECT id FROM all_users.users WHERE username = ?";
+    $sql = "SELECT id FROM legion_data.users WHERE username = ?";
 
     if($stmt = mysqli_prepare($conn, $sql)){
         // Bind variables to the prepared statement as parameters
@@ -81,6 +76,7 @@ if(empty( $username )) {
     }
 }
 
+
 // Validate password
 if(empty(trim($_POST["user_password"]))){
     echo "Please enter a password.";
@@ -93,15 +89,16 @@ if(empty(trim($_POST["user_password"]))){
 }
 
 // Prepare an insert statement
-$sql = "INSERT INTO all_users.users (username, password, version) VALUES (?, ?, ?)";
+$version = 'oze';
+
+$sql = "INSERT INTO legion_data.users (username, password) VALUES (?, ?)";
 if($stmt = mysqli_prepare($conn, $sql)){
   // Bind variables to the prepared statement as parameters
-  mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $param_version);
+  mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
 
   // Set parameters
   $param_username = $username;
   $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-  $param_version  = $version;
 
   // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)){

@@ -32,21 +32,12 @@ if ( $user_id == 0 ) {
 } else {
 
 	$version 				= $_POST['version'];
-	$database 			= '';
-
-	if ( $version == 'matt' ) {
-		$database = 'legion_data';
-	} else if ( $version == 'oze' ) {
-		$database = 'legion_data_oze';
-	}
-
-	echo "version = " . $version . "<br>";
-	echo "database = " . $database . "<br>";
+	$database = 'legion_data';
 
 	if ( !empty($database) ) {
 
 		/* see if this user has a cached version */
-		$sql = "SELECT username from $database.users where user_id = $user_id;";
+		$sql = "SELECT username from legion_data.users where user_id = $user_id;";
 		$result = $conn->query($sql);
 
 		$output = [];
@@ -54,14 +45,7 @@ if ( $user_id == 0 ) {
 			$output[] = $row;
 		}
 
-		echo "<pre>";
-		print_r($output);
-		echo "</pre>";
-		die();
-
-	} else {
-		echo "asdf";
-		die();
+		echo json_encode($output);
 	}
 
 }

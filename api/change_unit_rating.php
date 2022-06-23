@@ -47,9 +47,9 @@ if ($conn->connect_error) {
 }
 
 if ( $action == 'add' ) {
-	$sql = "UPDATE $database.units SET $update_field = $update_field + 1 where `id` = $unit_id;";
+	$sql = "UPDATE legion_data.units SET $update_field = $update_field + 1 where `id` = $unit_id;";
 } else if ( $action == 'remove' ) {
-	$sql = "UPDATE $database.units SET $update_field = $update_field - 1 where `id` = $unit_id;";
+	$sql = "UPDATE legion_data.units SET $update_field = $update_field - 1 where `id` = $unit_id;";
 }
 
 $result = $conn->query($sql);
@@ -58,7 +58,7 @@ $result = $conn->query($sql);
 if ( $action == 'add' ) {
 
 	$sql = "
-		INSERT INTO $database.units_audit
+		INSERT INTO legion_data.units_audit
 		(user_id, unit_id, audit_field, audit_value, updated_at)
 		VALUES
 		($user_id, $unit_id, '$update_field', 1, '$created_at')
@@ -67,7 +67,7 @@ if ( $action == 'add' ) {
 } else if ( $action == 'remove' ) {
 
 	$sql = "
-		INSERT INTO $database.units_audit
+		INSERT INTO legion_data.units_audit
 		(user_id, unit_id, audit_field, audit_value, updated_at)
 		VALUES
 		($user_id, $unit_id, '$update_field', 0, '$created_at')
