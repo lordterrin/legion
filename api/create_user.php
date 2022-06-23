@@ -28,6 +28,7 @@ if ($conn->connect_error) {
 
 $username 	= trim($_POST['user_username']);
 $password 	= $_POST['user_password'];
+$version 		= $_POST['version'];
 $email 			= '';
 $created_at = date("Y-m-d H:i:s", time());
 
@@ -49,7 +50,7 @@ if(empty( $username )) {
     die();
 } else {
     // Prepare a select statement
-    $sql = "SELECT id FROM $database.users WHERE username = ?";
+    $sql = "SELECT id FROM all_users.users WHERE username = ?";
 
     if($stmt = mysqli_prepare($conn, $sql)){
         // Bind variables to the prepared statement as parameters
@@ -92,14 +93,15 @@ if(empty(trim($_POST["user_password"]))){
 }
 
 // Prepare an insert statement
-$sql = "INSERT INTO $database.users (username, password) VALUES (?, ?)";
+$sql = "INSERT INTO all_users.users (username, password, version) VALUES (?, ?, ?)";
 if($stmt = mysqli_prepare($conn, $sql)){
   // Bind variables to the prepared statement as parameters
-  mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+  mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $param_version);
 
   // Set parameters
   $param_username = $username;
   $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+  $param_version  = $version;
 
   // Attempt to execute the prepared statement
   if(mysqli_stmt_execute($stmt)){

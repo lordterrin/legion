@@ -17,6 +17,30 @@ $dotenv->load();
   var display_type  = 'desktop';
   var current_page  = '';
   var version       = '';
+  var default_swal_options = {
+    container: 'custom_container',
+      popup: 'chooser_colors',
+      header: 'chooser_colors',
+      title: 'chooser_colors',
+      closeButton: 'chooser_colors',
+      icon: 'chooser_colors',
+      image: 'chooser_colors',
+      content: 'chooser_colors',
+      htmlContainer: 'chooser_colors',
+      input: 'chooser_colors',
+      inputLabel: 'chooser_colors',
+      validationMessage: 'chooser_colors',
+      actions: 'chooser_colors',
+      confirmButton: 'chooser_colors',
+      denyButton: 'chooser_colors',
+      cancelButton: 'chooser_colors',
+      loader: 'chooser_colors',
+      footer: 'chooser_colors.',
+      timerProgressBar: 'chooser_colors.',
+  };
+
+  var swap_html = '';
+
 
   function toggle_footer_search() {
     if ( display_type == 'mobile' ) {
@@ -283,7 +307,8 @@ $(document).on('click', '.th_login_holder', function() {
 function about_swal() {
   Swal.fire({
     title: "Created out of love for a 20 year old game.",
-    html : 'Questions? Comments? Email me at lordterrin (at) gmail (dot) com.  The entire website is held in a <a href="https://github.com/lordterrin/legion">public git repo</a>.'
+    html : 'Questions? Comments? Email me at lordterrin (at) gmail (dot) com.  The entire website is held in a <a href="https://github.com/lordterrin/legion">public git repo</a>.',
+    customClass: default_swal_options,
   })
 }
 
@@ -419,9 +444,12 @@ function open_th_login_prompt() {
 
 function open_login_prompt() {
 
+  console.log('login');
+
   if ( logged_in == 1 ) {
     Swal.fire({
       title: "You're already logged in",
+      html: swap_html,
       showCancelButton: true,
       cancelButtonText : 'Logout'
     }).then((result) => {
@@ -478,6 +506,7 @@ function open_login_prompt() {
     backdrop : true,
     showLoaderOnConfirm: true,
     allowOutsideClick: true,
+    customClass: default_swal_options,
     preConfirm: function (foo) {
 
       console.log('0: 1');
@@ -2194,45 +2223,16 @@ $(document).ready(function() {
 
 function show_loader() {
 
-  html = ''+
-  '<div class="loader_holder">'+
-    '<div class="choose_matt">'+
-      'SchachMatt'+
-    '</div>'+
-    '<div class="choose_oze">'+
-      'Team OZE'+
-    '</div>'+
-  '</div>'+
-  '';
-
-  Swal.fire({
-    title: "Choose Your Legion TD Version",
-    html : html,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    width: '75%',
-    customClass: {
-      container: 'custom_container',
-      popup: 'chooser_colors',
-      header: 'chooser_colors',
-      title: 'chooser_colors',
-      closeButton: 'chooser_colors',
-      icon: 'chooser_colors',
-      image: 'chooser_colors',
-      content: 'chooser_colors',
-      htmlContainer: 'chooser_colors',
-      input: 'chooser_colors',
-      inputLabel: 'chooser_colors',
-      validationMessage: 'chooser_colors',
-      actions: 'chooser_colors',
-      confirmButton: 'chooser_colors',
-      denyButton: 'chooser_colors',
-      cancelButton: 'chooser_colors',
-      loader: 'chooser_colors',
-      footer: 'chooser_colors.',
-      timerProgressBar: 'chooser_colors.',
-    }
-  })
+  version = 'oze';
+  swal.close();
+  discord_link = 'https://discord.gg/4bnCZPhq';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
+  $('.th_title').html('LTD Players Guide: Team OZE');
+  $("#home").click();
+  save_user_settings();
+  preload_data();
 
 }
 
@@ -2245,6 +2245,8 @@ $(document).on('click', '.choose_matt', function() {
   $('.left_header_subtitle').html('For Warcraft 3 Legion TD 9.5+ by SchachMatt');
   $('.th_title').html('LTD Players Guide: SchachMatt');
   $("#home").click();
+  swap_html = '<div class="swap_versions">Switch to the Team OZE Version</div>';
+  save_user_settings();
   preload_data();
 });
 
@@ -2256,10 +2258,39 @@ $(document).on('click', '.choose_oze', function() {
   $('#top_discord_link').attr('href', discord_link);
   $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
   $('.th_title').html('LTD Players Guide: Team OZE');
+  swap_html = '<div class="swap_versions">Switch to the SchachMatt Version</div>';
   $("#home").click();
+  save_user_settings();
   preload_data();
 });
 
+$(document).on('click', '.swap_versions', function() {
 
+  if ( version == 'matt' ) {
+    version = 'oze';
+    save_user_settings();
+  } else if ( version == 'oze' ) {
+    version = 'matt';
+    save_user_settings();
+  }
+
+})
+
+function save_user_settings() {
+
+  $.ajax({
+    type: "POST",
+    url: "api/save_user_settings.php",
+    data: {
+      version : version,
+    },
+    success: function(response) {
+
+
+    }
+
+  });
+
+}
 
 </script>
