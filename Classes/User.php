@@ -133,4 +133,5 @@ class User
       mysqli_close(self::$conn);
     }
   }
+
 }
