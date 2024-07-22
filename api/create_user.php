@@ -6,6 +6,8 @@ require $_SERVER['DOCUMENT_ROOT'] .'/legion/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'] . '/legion');
 $dotenv->load();
 
+require_once 'Classes/User.php' as User;
+
 $environment = $_ENV['environment'];
 
 if ( $environment !== 'prod') {
