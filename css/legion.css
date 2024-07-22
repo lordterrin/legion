@@ -6,8 +6,9 @@
 	font-family: Ubuntu;
 	font-family: "Fredoka One";
 	font-family: "Anek Odia";
-
-
+  font-family: "Bebas Neue";
+  font-family: "Comforter Brush";
+  font-family: "Open Sans";
 
 */
 
@@ -76,9 +77,21 @@ a:hover {
 }
 
 .chooser_colors {
-	background: rgb(105 105 133) !important;
-	color: rgb(133 133 164) !important;
-  font-family: Oswald;
+	background: rgb(19 19 25);
+  font-family: "Bebas Neue", sans-serif;
+}
+
+.swal2-cancel {
+  position: absolute;
+  bottom: -58px;
+  background: transparent;
+  right: 0;
+  transition: all 300ms;
+}
+
+.moveonup {
+  bottom: 0;
+  transition: all 300ms;
 }
 
 .choose_matt, .choose_oze {
@@ -120,6 +133,13 @@ a:hover {
 body.swal2-shown > [aria-hidden="true"] {
   transition: 0.1s filter;
   filter: blur(10px);
+}
+
+.swal2-title {
+  padding-bottom: 100px;
+  font-size:45px;
+  color: yellow;
+  letter-spacing: 3px;
 }
 
 .login_swal_holder {
@@ -171,14 +191,6 @@ body.swal2-shown > [aria-hidden="true"] {
 	opacity: 1.0;
 }
 
-.swal_success_validation {
-	background: rgb(218 255 181) !important;
-}
-
-.swal_success_validation::before {
-   background: rgb(93 183 3) !important;
-}
-
 .swal2-validation-message {
   align-items: center;
   justify-content: center;
@@ -191,6 +203,14 @@ body.swal2-shown > [aria-hidden="true"] {
   font-weight: 300;
 }
 
+.swal_success_validation {
+  background: rgb(76 133 19) !important;
+}
+
+.swal_success_validation::before {
+   background: rgb(93 183 3) !important;
+}
+
 .no_click_lowpacity {
 	cursor: not-allowed;
 	pointer-events: none;
@@ -199,29 +219,27 @@ body.swal2-shown > [aria-hidden="true"] {
 
 .create_account {
 	transition: .2s;
-  cursor: pointer;
-  border: 0;
-  border-radius: 0.25em;
-  background: initial;
-  background-color: #8ea594;
-  color: #fff;
-  font-size: 16px;
-  width: 130px;
-  height: 44px;
+  width: 100%;
+  height: 71px;
   display: flex;
-  justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 24.5px;
-  left: 19px;
-  font-weight: 600;
-  font-family: 'Ubuntu';
+  bottom: -70px;
+  left: 0px;
+  background: rgb(12 12 12);
+  padding-left: 35px;
 }
 
-.create_account:hover {
-	transition: .2s;
-	text-shadow: 0px 0px 1px black;
+.create_account--new {
+  font-family: "Anek Odia";
+  color: rgb(205 180 180);
+  padding-right: 15px;
+}
 
+.create_account--create {
+  font-family: "Anek Odia";
+  color: white;
+  cursor: pointer;
 }
 
 .tiny_header {
@@ -307,14 +325,14 @@ body.swal2-shown > [aria-hidden="true"] {
 .legion_body {
 	overflow-x: hidden;
 	overflow-y: auto;
+  height: calc(100vh - 80px);
 }
 
 .lb_home {
 	color: white;
-  width: 75%;
+  width: 90%;
   margin: 0 auto;
   text-align: center;
-  padding-top: 50px;
   font-size: 26px;
 }
 
@@ -324,12 +342,23 @@ body.swal2-shown > [aria-hidden="true"] {
 }
 
 .lb_title {
-	font-family: "Fredoka One";
-  font-size: 50px;
-  color: #debebe;
-  text-shadow: 0px 0px 41px white;
+	font-family: "Bebas Neue";
+  font-size: 8em;
+  color: yellow;
+  text-shadow: 17px 15px 10px rgb(255 255 0 / 15%);
   letter-spacing: 4px;
-  margin-top: 25px;
+  margin-top: 0px;
+  align-self: flex-start;
+  padding-left: 0.5em;
+}
+
+.lb_title:after {
+  position: absolute;
+  border-bottom: 25px solid yellow;
+  width: 100%;
+  content: "-----------";
+  font-size: 1px;
+  top: 78px;
 }
 
 .lb_holder {
@@ -338,14 +367,15 @@ body.swal2-shown > [aria-hidden="true"] {
 	align-items: center;
 	flex-direction: column;
 	padding-top: 0px;
+  position: relative;
 }
 
 .lb_text {
 	font-family: "Anek Odia";
-  background: rgb(157 157 198 / 35%);
+  background: rgb(56 56 110 / 35%);
   border-radius: 9px;
   padding: 25px;
-  margin-top: 25px;
+  /* margin-top: 25px; */
   margin-bottom: 25px;
   font-size: 20px;
 }
@@ -420,7 +450,7 @@ body.swal2-shown > [aria-hidden="true"] {
 
 @keyframes slide_right {
 	0% { right: 0px; }
-	100% { right: -73px; }
+	100% { right: -138px; }
 }
 
 .th_left_open {
@@ -590,6 +620,7 @@ body.swal2-shown > [aria-hidden="true"] {
   font-family: 'Oswald';
   align-items: center;
   font-size: 12px;
+  display: none;
 }
 
 .footer_item {
@@ -627,11 +658,15 @@ body.swal2-shown > [aria-hidden="true"] {
   min-width: 150px;
 }
 
+.current_game_mode--mode {
+  position: relative;
+  top: 5px;
+}
+
 .copy_gamemode {
-	display: inline;
   position: absolute;
-  right: 10px;
-  top: 8px;
+  right: -57px;
+  top: 3px;
   cursor: pointer;
 }
 
@@ -684,22 +719,26 @@ body.swal2-shown > [aria-hidden="true"] {
   text-align: left;
   margin-left: 12px;
   width: 95%;
+  min-height: 65px;
 }
 
 .st_title {
-	background: rgb(57 53 72);
+	background: rgb(47 43 62);
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
-  min-width: 56px;
-  padding: 10px;
+  min-width: 70px;
+  min-height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 5px;
 }
 
 .st_title_text {
 	font-size: 22px;
   font-weight: 900;
+  position: relative;
+  top: 3px;
 }
 
 .st_text {
@@ -727,7 +766,7 @@ body.swal2-shown > [aria-hidden="true"] {
   visibility: visible;
   display: flex;
   justify-content: flex-start;
-  align-items: strech;
+  align-items: center;
 }
 
 .primary_modes {
@@ -1173,7 +1212,7 @@ body.swal2-shown > [aria-hidden="true"] {
 .rate_message_holder {
 	border: 3px solid white;
   border-radius: 9px;
-  background: rgb(167 155 198);
+  background: rgb(141 141 141);
   padding: 16px;
   color: rgb(11 6 27);
   font-weight: 900;
@@ -1181,8 +1220,8 @@ body.swal2-shown > [aria-hidden="true"] {
 }
 
 .rate_message_holder span {
-	color: rgb(255 128 0);
-  text-shadow: 0px 0px 6px rgb(0 0 0 / 60%);
+	color: yellow;
+  text-shadow: 0px 0px 1px rgb(0 0 0 / 60%);
 }
 
 .no_strategy_holder {
@@ -1342,13 +1381,17 @@ body.swal2-shown > [aria-hidden="true"] {
 }
 
 .login__input::-webkit-input-placeholder {
-  color: rgb(182 182 188);
+  color: rgb(112 112 118);
   letter-spacing: 3px;
 }
 
 .login__input::placeholder {
-  color: rgb(182 182 188);
+  color: rgb(69 69 85);
   letter-spacing: 3px;
+}
+
+.swal2-popup {
+  background: #3f3a6e;
 }
 
 .swal2-styled.swal2-confirm {
@@ -1358,8 +1401,16 @@ body.swal2-shown > [aria-hidden="true"] {
   background-color: #3f3a6e !important;
   color: #fff !important;
   font-size: 1em;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
   font-family: 'Ubuntu';
   font-weight: 600;
+}
+
+.logout {
+  color: rgb(228 59 59);
+}
+
+.alertify-notifier.ajs-bottom {
+  bottom: 25px;
 }

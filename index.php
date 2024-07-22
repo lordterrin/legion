@@ -12,6 +12,10 @@ $dotenv->load();
 <?php include 'header.php';?>
 <?php include 'footer.php';?>
 
+<?php
+$login_status = ( empty($_SESSION["user_id"]) ? 'login' : '<div class="logout">log out</div>' );
+?>
+
 <script>
 
   var display_type  = 'desktop';
@@ -64,7 +68,9 @@ $dotenv->load();
       display_type = 'mobile';
       show_tiny_header();
     } else {
-      hide_tiny_header();
+      show_tiny_header();
+      /* I've opted to just ALWAYS show the tiny header as it is more "modern UI designy" */
+      //hide_tiny_header();
     }
   }
 
@@ -121,8 +127,13 @@ function show_tiny_header() {
 
 function hide_tiny_header() {
 
+  console.log("hiding tiny header");
+
   if ( display_type == 'mobile' ) {
     return false;
+  } else {
+    return false;
+    /* no longer using the big header */
   }
 
   $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
@@ -158,7 +169,7 @@ function hide_tiny_header() {
     <div class="th_item th_modes">modes</div>
     <div class="th_item th_units">units</div>
     <div class="th_item th_levels">levels</div>
-    <div class="th_item th_login">login</div>
+    <div class="th_item th_login"><?php echo $login_status ?></div>
 
     <div class="th_item th_filter">
       <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt hideme">
@@ -178,7 +189,7 @@ function hide_tiny_header() {
         <div class="left_header_subtitle">For Warcraft 3 Legion TD 9.5+ by SchachMatt</div>
       </div>
       <div class="right_header">
-        <div class="left_header_item">Discord: <a id="top_discord_link" target="_blank" href="">https://discord.gg/n5tWRPgqJm</a></div>
+        <div class="left_header_item">Discord: <a id="top_discord_link" target="_blank" href="">https://discord.gg/4VUaJzKT</a></div>
         <div title="Login and account creation" class="login_holder">
           <div class="login_status"></div>
           <img class="home_left" src="img/wc3_left.png">
@@ -380,7 +391,9 @@ async function wait_for_user_login(user_username, user_password) {
 
 }
 
-$(document).on('click', '.create_account', async function() {
+$(document).on('click', '.create_account--create', async function() {
+
+  $('.swal2-confirm').addClass('hideme');
 
   user_username = $('#user_username').val();
   user_password = $('#user_password').val();
@@ -393,10 +406,17 @@ $(document).on('click', '.create_account', async function() {
 
   create_user = await wait_for_new_user_creation(user_username, user_password);
 
-  if ( create_user == 'Success!' ) {
+  if ( create_user == 'success' ) {
+
+    $('.swal2-confirm').removeClass('hideme');
+    $('.create_account').addClass('hideme');
+    $('.swal2-cancel').addClass('moveonup');
+
     Swal.showValidationMessage('Success! Go ahead and log in.');
     $('.swal2-validation-message').addClass('swal_success_validation');
     $('.create_account').addClass('no_click_lowpacity');
+
+    $('.th_login').text('log out').addClass('logout');
 
   } else {
     Swal.showValidationMessage(create_user);
@@ -495,7 +515,10 @@ function open_login_prompt() {
       '<i class="login__icon fas fa-lock"></i>'+
       '<input id="user_password" type="password" class="login__input" placeholder="Password">'+
     '</div>'+
-    '<div class="create_account">create account</div>'+
+  '</div>'+
+  '<div class="create_account">'+
+    '<div class="create_account--new">new here?</div>'+
+    '<div class="create_account--create">create account</div>'+
   '</div>';
 
   Swal.fire({
@@ -664,7 +687,9 @@ function show_modes() {
 
       '<div class="lb_modes_holder">'+
 
-        '<div class="current_game_mode"></div>'+
+        '<div class="current_game_mode">'+
+          '<div class="current_game_mode--mode"></div>'+
+        '</div>'+
 
         '<div class="mode_output">'+
 
@@ -818,7 +843,7 @@ function set_current_game_mode() {
   var copy_icon     = '<div class="copy_gamemode"><span class="material-icons">content_copy</span></div>';
   current_game_mode = "<span>" + primary_game_mode + '</span>' + sgm_string
 
-  $('.current_game_mode').html(current_game_mode  + '' + copy_icon);
+  $('.current_game_mode--mode').html(current_game_mode  + '' + copy_icon);
 
 }
 
@@ -1374,7 +1399,7 @@ function show_units() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.  Use the <span>filter</span> at the top of the page to quickly search for any words that exist anywhere on the page.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels</span> page for all users</div></div>'+
+      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.  Use the <span>filter</span> at the top of the page to quickly search for any words that exist anywhere on the page.<div class="rate_message_holder"><div class="rate_message">Do you understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels page</span> for all users</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -1880,7 +1905,7 @@ function show_levels() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains 20-30 levels of intense action! Below you will find a general overview for each level, the damage and armor types for the units that spawn, as well as helpful information from the community on which specific towers do well here, and which ones you may want to avoid. <div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Head over to the <span>units</span> page and help!</div></div>'+
+      'Legion TD contains 20-30 levels of intense action! Below you will find a general overview for each level, the damage and armor types for the units that spawn, as well as helpful information from the community on which specific towers do well here, and which ones you may want to avoid. <div class="rate_message_holder"><div class="rate_message">Do you understand Legion TD well?  Head over to the <span>units</span> page and help!</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -2114,6 +2139,8 @@ $(document).on('keyup change paste', '#th_filter', function() {
 
 function set_legion_body_height() {
 
+  return false;
+
   if ( current_page == 'modes' ) {
 
     console.log('set_fixed_body_height');
@@ -2225,7 +2252,7 @@ function show_loader() {
 
   version = 'oze';
   swal.close();
-  discord_link = 'https://discord.gg/4bnCZPhq';
+  discord_link = 'https://discord.gg/4VUaJzKT';
   $('#top_discord_link').html(discord_link);
   $('#top_discord_link').attr('href', discord_link);
   $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
@@ -2253,7 +2280,7 @@ $(document).on('click', '.choose_matt', function() {
 $(document).on('click', '.choose_oze', function() {
   version = 'oze';
   swal.close();
-  discord_link = 'https://discord.gg/4bnCZPhq';
+  discord_link = 'https://discord.gg/4VUaJzKT';
   $('#top_discord_link').html(discord_link);
   $('#top_discord_link').attr('href', discord_link);
   $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
