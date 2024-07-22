@@ -12,10 +12,39 @@ $dotenv->load();
 <?php include 'header.php';?>
 <?php include 'footer.php';?>
 
+<?php
+$login_status = ( empty($_SESSION["user_id"]) ? 'login' : '<div class="logout">log out</div>' );
+?>
+
 <script>
 
-  var display_type = 'desktop';
-  var current_page = '';
+  var display_type  = 'desktop';
+  var current_page  = '';
+  var version       = '';
+  var default_swal_options = {
+    container: 'custom_container',
+      popup: 'chooser_colors',
+      header: 'chooser_colors',
+      title: 'chooser_colors',
+      closeButton: 'chooser_colors',
+      icon: 'chooser_colors',
+      image: 'chooser_colors',
+      content: 'chooser_colors',
+      htmlContainer: 'chooser_colors',
+      input: 'chooser_colors',
+      inputLabel: 'chooser_colors',
+      validationMessage: 'chooser_colors',
+      actions: 'chooser_colors',
+      confirmButton: 'chooser_colors',
+      denyButton: 'chooser_colors',
+      cancelButton: 'chooser_colors',
+      loader: 'chooser_colors',
+      footer: 'chooser_colors.',
+      timerProgressBar: 'chooser_colors.',
+  };
+
+  var swap_html = '';
+
 
   function toggle_footer_search() {
     if ( display_type == 'mobile' ) {
@@ -39,7 +68,9 @@ $dotenv->load();
       display_type = 'mobile';
       show_tiny_header();
     } else {
-      hide_tiny_header();
+      show_tiny_header();
+      /* I've opted to just ALWAYS show the tiny header as it is more "modern UI designy" */
+      //hide_tiny_header();
     }
   }
 
@@ -96,8 +127,13 @@ function show_tiny_header() {
 
 function hide_tiny_header() {
 
+  console.log("hiding tiny header");
+
   if ( display_type == 'mobile' ) {
     return false;
+  } else {
+    return false;
+    /* no longer using the big header */
   }
 
   $('.tiny_header').removeClass('grow_tiny_header').addClass('shrink_tiny_header');
@@ -133,7 +169,7 @@ function hide_tiny_header() {
     <div class="th_item th_modes">modes</div>
     <div class="th_item th_units">units</div>
     <div class="th_item th_levels">levels</div>
-    <div class="th_item th_login">login</div>
+    <div class="th_item th_login"><?php echo $login_status ?></div>
 
     <div class="th_item th_filter">
       <div title="search by literally any word anywhere" id="units_table_filter_alt" class="dataTables_filter_alt hideme">
@@ -153,7 +189,7 @@ function hide_tiny_header() {
         <div class="left_header_subtitle">For Warcraft 3 Legion TD 9.5+ by SchachMatt</div>
       </div>
       <div class="right_header">
-        <div class="left_header_item">Discord: <a target="_blank" href="https://discord.gg/n5tWRPgqJm">https://discord.gg/n5tWRPgqJm</a></div>
+        <div class="left_header_item">Discord: <a id="top_discord_link" target="_blank" href="">https://discord.gg/4VUaJzKT</a></div>
         <div title="Login and account creation" class="login_holder">
           <div class="login_status"></div>
           <img class="home_left" src="img/wc3_left.png">
@@ -206,7 +242,7 @@ function hide_tiny_header() {
       </div>
     </div>
 
-    <div class="footer_item">(c)2022</div>
+    <div class="footer_item"></div>
     <div class="footer_item" onclick="about_swal()">About</div>
     <div class="footer_item">Home</div>
   </div>
@@ -227,7 +263,7 @@ $('.th_item').click(function() {
     $('#home').trigger('click');
     hide_tiny_header();
   } else if ( $(this).hasClass('th_discord') ) {
-    window.open('https://discord.gg/n5tWRPgqJm', '_blank');
+    window.open(discord_link, '_blank');
   } else if ( $(this).hasClass('th_home') ) {
     $('#home').trigger('click');
     hide_tiny_header();
@@ -282,7 +318,8 @@ $(document).on('click', '.th_login_holder', function() {
 function about_swal() {
   Swal.fire({
     title: "Created out of love for a 20 year old game.",
-    text : "Questions? Comments? Email me at lordterrin (at) gmail (dot) com"
+    html : 'Questions? Comments? Email me at lordterrin (at) gmail (dot) com.  The entire website is held in a <a href="https://github.com/lordterrin/legion">public git repo</a>.',
+    customClass: default_swal_options,
   })
 }
 
@@ -298,6 +335,7 @@ function create_new_user(user_username, user_password) {
       data: {
         user_username : user_username,
         user_password : user_password,
+        version       : version,
       },
       success: function(response) {
         console.log('2: before resolve');
@@ -321,6 +359,7 @@ function log_user_in(user_username, user_password) {
       data: {
         user_username : user_username,
         user_password : user_password,
+        version       : version,
       },
       success: function(response) {
         console.log('2: before resolve');
@@ -352,7 +391,9 @@ async function wait_for_user_login(user_username, user_password) {
 
 }
 
-$(document).on('click', '.create_account', async function() {
+$(document).on('click', '.create_account--create', async function() {
+
+  $('.swal2-confirm').addClass('hideme');
 
   user_username = $('#user_username').val();
   user_password = $('#user_password').val();
@@ -365,10 +406,17 @@ $(document).on('click', '.create_account', async function() {
 
   create_user = await wait_for_new_user_creation(user_username, user_password);
 
-  if ( create_user == 'Success!' ) {
+  if ( create_user == 'success' ) {
+
+    $('.swal2-confirm').removeClass('hideme');
+    $('.create_account').addClass('hideme');
+    $('.swal2-cancel').addClass('moveonup');
+
     Swal.showValidationMessage('Success! Go ahead and log in.');
     $('.swal2-validation-message').addClass('swal_success_validation');
     $('.create_account').addClass('no_click_lowpacity');
+
+    $('.th_login').text('log out').addClass('logout');
 
   } else {
     Swal.showValidationMessage(create_user);
@@ -416,9 +464,12 @@ function open_th_login_prompt() {
 
 function open_login_prompt() {
 
+  console.log('login');
+
   if ( logged_in == 1 ) {
     Swal.fire({
       title: "You're already logged in",
+      html: swap_html,
       showCancelButton: true,
       cancelButtonText : 'Logout'
     }).then((result) => {
@@ -464,7 +515,10 @@ function open_login_prompt() {
       '<i class="login__icon fas fa-lock"></i>'+
       '<input id="user_password" type="password" class="login__input" placeholder="Password">'+
     '</div>'+
-    '<div class="create_account">create account</div>'+
+  '</div>'+
+  '<div class="create_account">'+
+    '<div class="create_account--new">new here?</div>'+
+    '<div class="create_account--create">create account</div>'+
   '</div>';
 
   Swal.fire({
@@ -475,6 +529,7 @@ function open_login_prompt() {
     backdrop : true,
     showLoaderOnConfirm: true,
     allowOutsideClick: true,
+    customClass: default_swal_options,
     preConfirm: function (foo) {
 
       console.log('0: 1');
@@ -590,7 +645,7 @@ function show_home() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> maps by SchachMatt.  Much of the content here is applicable to other versions of Legion TD as well.'+
+      'The Legion TD Players Guide exists to help both new and experienced players understand and build their skills in the Warcraft 3 custom <span>Legion TD</span> map.  Much of the content here is applicable to other versions of Legion TD as well.'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -598,7 +653,7 @@ function show_home() {
     '</div>'+
 
     '<div class="lb_text">'+
-      'Legion TD was first created by Lisk in 2009.  He has gone on to develop the standalone game <a href="https://legiontd2.com">Legion TD 2</a>, which is available on Steam.  Once he began work on this new game, he made the original source code for his map available to others, and many developers have stepped in create new and modified versions of the game over the years, including HuanAk and Team OZE.  As of today, the most popular version of the map is the version created and maintained by SchachMatt. To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="https://discord.gg/n5tWRPgqJm"> visit the discord</a>'+
+      'Legion TD was first created by Lisk in 2009.  He has gone on to develop the standalone game <a href="https://legiontd2.com">Legion TD 2</a>, which is available on Steam.  Once he began work on this new game, he made the original source code for his map available to others, and many developers have stepped in create new and modified versions of the game over the years, including SchachMatt, HuanAk and Team OZE.  As of today, the two most popular versions of the map are the version created and maintained by SchachMatt, and the version created and maintained by Team OZE. To download the most recent version of the map, chat with other players, provide suggestions, or discuss bugs, please <a href="'+ discord_link +'"> visit the discord</a>'+
     '</div>'+
 
   '</div>';
@@ -632,7 +687,9 @@ function show_modes() {
 
       '<div class="lb_modes_holder">'+
 
-        '<div class="current_game_mode"></div>'+
+        '<div class="current_game_mode">'+
+          '<div class="current_game_mode--mode"></div>'+
+        '</div>'+
 
         '<div class="mode_output">'+
 
@@ -786,7 +843,7 @@ function set_current_game_mode() {
   var copy_icon     = '<div class="copy_gamemode"><span class="material-icons">content_copy</span></div>';
   current_game_mode = "<span>" + primary_game_mode + '</span>' + sgm_string
 
-  $('.current_game_mode').html(current_game_mode  + '' + copy_icon);
+  $('.current_game_mode--mode').html(current_game_mode  + '' + copy_icon);
 
 }
 
@@ -1342,7 +1399,7 @@ function show_units() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.  Use the <span>filter</span> at the top of the page to quickly search for any words that exist anywhere on the page.<div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels</span> page for all users</div></div>'+
+      'Legion TD contains over 100 units that you can build to defend your lane against waves of units, and that can be quite overwhelming to both new and advanced players.  Below is a list of all units in the game.  Use the <span>filter</span> at the top of the page to quickly search for any words that exist anywhere on the page.<div class="rate_message_holder"><div class="rate_message">Do you understand Legion TD well?  Help the community by rating units up or down for any level, or writing descriptions and notes.  Ratings are visible in the <span>levels page</span> for all users</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -1613,6 +1670,7 @@ $(document).on('click', '.confirm_button_alt', function() {
     data: {
       new_unit_text : new_unit_text,
       unit_id       : this_unit_id,
+      version       : version,
     },
     success: function(response) {
 
@@ -1656,6 +1714,7 @@ $(document).on('click', '.confirm_button', function() {
     data: {
       new_unit_text : new_unit_text,
       unit_id       : this_unit_id,
+      version       : version,
     },
     success: function(response) {
       foo = response;
@@ -1763,10 +1822,11 @@ function change_unit_rating(unit_id, level, rating, action) {
     type: "POST",
     url: "api/change_unit_rating.php",
     data: {
-      unit_id : unit_id,
-      level   : level,
-      rating  : rating,
-      action  : action,
+      unit_id   : unit_id,
+      level     : level,
+      rating    : rating,
+      action    : action,
+      version   : version,
     },
     success: function(response) {
       foo = response;
@@ -1789,7 +1849,11 @@ function pre_show_levels() {
   current_page = 'levels';
 
   $.ajax({
+    type: 'POST',
     url: "api/pull_units.php",
+    data: {
+      version : version,
+    },
     success: function(result){
         try {
 
@@ -1841,7 +1905,7 @@ function show_levels() {
   '<div class="lb_home">'+
 
     '<div class="lb_text">'+
-      'Legion TD contains 20-30 levels of intense action! Below you will find a general overview for each level, the damage and armor types for the units that spawn, as well as helpful information from the community on which specific towers do well here, and which ones you may want to avoid. <div class="rate_message_holder"><div class="rate_message">Understand Legion TD well?  Head over to the <span>units</span> page and help!</div></div>'+
+      'Legion TD contains 20-30 levels of intense action! Below you will find a general overview for each level, the damage and armor types for the units that spawn, as well as helpful information from the community on which specific towers do well here, and which ones you may want to avoid. <div class="rate_message_holder"><div class="rate_message">Do you understand Legion TD well?  Head over to the <span>units</span> page and help!</div></div>'+
     '</div>'+
 
     '<div class="lb_text">'+
@@ -2075,6 +2139,8 @@ $(document).on('keyup change paste', '#th_filter', function() {
 
 function set_legion_body_height() {
 
+  return false;
+
   if ( current_page == 'modes' ) {
 
     console.log('set_fixed_body_height');
@@ -2121,6 +2187,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_units.php",
+    type: 'POST',
+    data : {
+      version  : version,
+    },
     success: function(result){
         try {
           units_data = JSON.parse(result);
@@ -2132,6 +2202,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_levels.php",
+    type: 'POST',
+    data : {
+      version  : version,
+    },
     success: function(result){
         try {
           levels_data = JSON.parse(result);
@@ -2143,6 +2217,10 @@ function preload_data() {
 
   $.ajax({
     url: "api/pull_user_settings.php",
+    type: 'POST',
+    data : {
+      version : version,
+    },
     success: function(result){
         try {
           user_data = JSON.parse(result);
@@ -2158,18 +2236,88 @@ $(document).ready(function() {
 
   set_legion_body_height();
 
-  $("#home").click();
-
   check_display_type();
 
   set_legion_body_height();
+
+  show_loader();
 
   if ( logged_in == 1 ) {
     $('.login_status').addClass('logged_in');
   }
 
+});
+
+function show_loader() {
+
+  version = 'oze';
+  swal.close();
+  discord_link = 'https://discord.gg/4VUaJzKT';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
+  $('.th_title').html('LTD Players Guide: Team OZE');
+  $("#home").click();
+  save_user_settings();
+  preload_data();
+
+}
+
+$(document).on('click', '.choose_matt', function() {
+  version = 'matt';
+  swal.close();
+  discord_link = 'https://discord.gg/n5tWRPgqJm';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 9.5+ by SchachMatt');
+  $('.th_title').html('LTD Players Guide: SchachMatt');
+  $("#home").click();
+  swap_html = '<div class="swap_versions">Switch to the Team OZE Version</div>';
+  save_user_settings();
+  preload_data();
+});
+
+$(document).on('click', '.choose_oze', function() {
+  version = 'oze';
+  swal.close();
+  discord_link = 'https://discord.gg/4VUaJzKT';
+  $('#top_discord_link').html(discord_link);
+  $('#top_discord_link').attr('href', discord_link);
+  $('.left_header_subtitle').html('For Warcraft 3 Legion TD 10.0+ by Team OZE');
+  $('.th_title').html('LTD Players Guide: Team OZE');
+  swap_html = '<div class="swap_versions">Switch to the SchachMatt Version</div>';
+  $("#home").click();
+  save_user_settings();
+  preload_data();
+});
+
+$(document).on('click', '.swap_versions', function() {
+
+  if ( version == 'matt' ) {
+    version = 'oze';
+    save_user_settings();
+  } else if ( version == 'oze' ) {
+    version = 'matt';
+    save_user_settings();
+  }
+
 })
 
+function save_user_settings() {
 
+  $.ajax({
+    type: "POST",
+    url: "api/save_user_settings.php",
+    data: {
+      version : version,
+    },
+    success: function(response) {
+
+
+    }
+
+  });
+
+}
 
 </script>

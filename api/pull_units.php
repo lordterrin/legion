@@ -15,6 +15,8 @@ if ( $environment !== 'prod') {
 $username 	= $_ENV['username'];
 $password 	= $_ENV['db_password'];
 
+$version 				= $_POST['version'];
+
 // Create connection
 $conn = new mysqli($servername, $username, $password);
 
@@ -23,7 +25,7 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM `legion_data`.units;";
+$sql = "SELECT * FROM legion_data.units;";
 $result = $conn->query($sql);
 
 $output = [];

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require $_SERVER['DOCUMENT_ROOT'] .'/legion/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT'] . '/legion');
 $dotenv->load();
@@ -15,6 +17,16 @@ if ( $environment !== 'prod') {
 $username 	= $_ENV['username'];
 $password 	= $_ENV['db_password'];
 
+$user_id 		= $_SESSION["user_id"] ?? 0;
+if ( $user_id == 0 ) {
+	echo "no user is logged in";
+	die();
+}
+
+$version 				= $_POST['version'];
+$database = 'legion_data';
+
+
 // Create connection
 $conn = new mysqli($servername, $username, $password);
 
@@ -23,7 +35,7 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM legion_data.levels;";
+$sql = "SELECT * from legion_data.units_audit where user_id = $user_id;";
 $result = $conn->query($sql);
 
 $output = [];

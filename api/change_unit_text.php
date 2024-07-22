@@ -30,8 +30,6 @@ $unit_id 	  		= $_POST['unit_id'];
 $new_unit_text 	= $_POST['new_unit_text'];
 $user_id 				= $_SESSION["user_id"];
 
-
-
 // Create connection
 $conn = new mysqli($servername, $username, $password);
 
